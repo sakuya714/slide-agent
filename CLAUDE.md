@@ -2,6 +2,8 @@
 
 このリポジトリは、HTML でスライドを作って、ブラウザで直して、PDF・PowerPoint で編集できる PPTX に書き出すローカルアプリ。資料は `private/`（Git 管理外）に入っている。
 
+AI 向けの情報は全部このファイル。人向けの説明（使い方・画面・フォルダ構成・仕組み）は `README.md` にある。
+
 ## 資料を作る・直すとき
 
 1. 下の「deck.html の書き方」に従う（全員共通）
@@ -100,25 +102,20 @@
 | 画像は実在するファイルを指す（✖） | |
 | 文字は 14px 以上（△） | 投影・印刷で読めない |
 | 色は `var(--accent)` などテーマ色で書く。`style="color:#c00"` のような直書きをしない（△） | テーマ色の一括変更が効かなくなる |
-| グラデーション・影・回転・SVG・表は、PPTX でその部分が画像になる（△） | PowerPoint で文字を直せなくなる。直せる必要がある文字には使わない |
+| グラデーション・影・回転・SVG・表・角丸の写真は、PPTX でその部分が画像になる（△） | PowerPoint で文字を直せなくなる。直せる必要がある文字には使わない |
 | 1スライド＝1メッセージ。文は短く | 営業資料・発表資料として読まれるため |
 
 `style` 属性は「大きさの微調整（`font-size`・`margin-top`・`height` など）」だけに使う。並べ方はクラスで書く。
 
-### 5. PPTX になるとき
+## アプリのコードを直すとき
 
-| HTML | PowerPoint |
-|---|---|
-| 文字（見出し・段落・箇条書き） | テキストボックス（1文字単位で色・太さ・大きさを再現） |
-| 背景色・枠線・角丸のある箱、`.bar` の縦線 | 図形 |
-| 画像（`img`・背景画像） | 画像（`object-fit: cover` のトリミングも再現） |
-| SVG・グラデーション・影・回転・表・角丸の写真 | その部分だけ画像 |
-| `<aside class="notes">` | ノート |
-
-フォントは PPTX では `--pptx-font-sans`（游ゴシック）・`--pptx-font-serif`（游明朝）に置き換わる。PowerPoint は日本語の改行位置が Chrome と少し違うので、文字の箱は少し広げてある。
+- 構成と仕組みは `README.md` の「フォルダ構成」「仕組み」。直したら README も同じ commit で合わせる（人向けの説明は README だけ）
+- 画面は素の JavaScript（`editor/app.js`）。ビルドしない・ライブラリを足さない
+- 編集画面が資料に付ける目印（`data-kit-cur`・`data-kit-sel`・`data-kit-hover`・`contenteditable`・`<style data-kit="edit">`・`<base data-kit="base">`）は、保存時に `clean()` で必ず外す。新しく目印を足したら `KIT_ATTRS` か `clean()` にも足す
+- テーマ（`theme/default.css`）を変えたら、このファイルの「3. 使える部品」も直す。既存の資料には自動で反映されない（資料ごとにテーマを埋め込んでいるため）
+- 確かめ方：`slide restart` → `slide check` と `slide pdf` / `slide pptx` を見本の資料で通す。画面はブラウザで実際に操作して確かめる
 
 ## リポジトリで守ること
 
-- `private/` の中身（資料・ルール・名前・顧客名）を、コード・docs・README・commit メッセージに書かない。このリポジトリは公開されている
+- `private/` の中身（資料・ルール・名前・顧客名）を、コード・README・commit メッセージに書かない。このリポジトリは公開されている
 - `private/` は `.gitignore` と pre-commit フック（`hooks/`）で Git に入らない。push の前に `git status` で確かめる
-- アプリのコードを直したら、`README.md` の構成表と `docs/design.md` も合わせて直す
