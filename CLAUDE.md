@@ -1,4 +1,4 @@
-# slide-kit（Claude Code 向け）
+# slide-agent（Claude Code 向け）
 
 このリポジトリは、HTML でスライドを作って、ブラウザで直して、PDF・PowerPoint で編集できる PPTX に書き出すローカルアプリ。資料は `private/`（Git 管理外）に入っている。
 

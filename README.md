@@ -1,4 +1,4 @@
-# slide-kit
+# slide-agent
 
 AI が HTML で作ったスライドを、ブラウザで直して、**PDF** と **PowerPoint で編集できる PPTX** に書き出すローカルアプリ（Mac）。
 
@@ -13,8 +13,8 @@ AI が deck.html を書く ──→ 画面で直す ──→ AI がさらに�
 ## インストール
 
 ```bash
-git clone https://github.com/sakuya714/slide-kit.git
-cd slide-kit && ./install.sh
+git clone https://github.com/sakuya714/slide-agent.git
+cd slide-agent && ./install.sh
 ```
 
 必要なもの：Mac・Homebrew・Google Chrome（PDF・PPTX の書き出しに使う）。AI に資料を作らせるなら Claude Code。`install.sh` が `private/`・`slide` コマンドを用意する。
@@ -59,7 +59,7 @@ slide stop / slide restart       # 裏で動くサーバーを止める／起動
 ```
 ☰ を押すとサイドバー                メイン画面
 ┌────────────────┐┌─────────────────────────────────────────────┐
-│ slide-kit        ││ ☰  〇〇社_提案  ● 保存済み            ↶ ↷  64% │
+│ slide-agent        ││ ☰  〇〇社_提案  ● 保存済み            ↶ ↷  64% │
 │                  │├────────┬─────────────────────────┬──────────┤
 │ ▾ 営業           ││ ＋ 追加 │ スライド3 › カード › 見出し │ 部品      │
 │   ▸ 〇〇社_提案   ││ ┌────┐ │ ┌─────────────────────┐ │ 文字色・大きさ│
@@ -76,7 +76,7 @@ slide stop / slide restart       # 裏で動くサーバーを止める／起動
 ## フォルダ構成
 
 ```
-slide-kit/
+slide-agent/
 ├── README.md        人向けの説明（これ）
 ├── CLAUDE.md        AI 向けの説明（資料の作り方・コードを直すときの決まり）
 ├── bin/slide        slide コマンド（~/.local/bin/slide からリンク）
@@ -108,7 +108,7 @@ slide-kit/
 
 ## 仕組み
 
-- **サーバー**：`slide` を打つと、裏で `127.0.0.1:8770` にサーバーが立つ（外からはつながらない）。ログは `~/Library/Logs/slide-kit.log`
+- **サーバー**：`slide` を打つと、裏で `127.0.0.1:8770` にサーバーが立つ（外からはつながらない）。ログは `~/Library/Logs/slide-agent.log`
 - **編集画面**：資料を画面の中の iframe に読み込み、その HTML を直接いじる。選択中などの目印は保存するときに外すので、deck.html はいつもきれいなまま
 - **外からの変更**：画面が2秒ごとにファイルの更新時刻を確認する。保存しようとしたときにファイルが変わっていたら、上書きせずに確認を出す
 - **PDF**：Mac の Google Chrome を裏で動かして（Playwright）、1280×720 のページを1枚ずつ印刷する

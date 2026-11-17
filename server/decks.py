@@ -3,8 +3,8 @@ from __future__ import annotations
 import os, re, shutil
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent          # slide-kit/
-PRIVATE = Path(os.environ.get("SLIDE_KIT_PRIVATE", ROOT / "private")).resolve()   # ユーザーのもの全部（Git 管理外）
+ROOT = Path(__file__).resolve().parent.parent          # slide-agent/
+PRIVATE = Path(os.environ.get("SLIDE_AGENT_PRIVATE", ROOT / "private")).resolve()   # ユーザーのもの全部（Git 管理外）
 DECKS = PRIVATE / "deck"                                 # 資料の本体（サイドバーに出るのはここ）
 OUTPUT = PRIVATE / "final"                               # 完成品：書き出した PDF・PPTX（中は資料ごと）
 THEME = ROOT / "theme"

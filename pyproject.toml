@@ -1,5 +1,5 @@
 [project]
-name = "slide-kit"
+name = "slide-agent"
 version = "0.1.0"
 description = "AI が HTML で作ったスライドをブラウザで直して、PDF・編集できる PPTX に書き出すローカルアプリ"
 requires-python = ">=3.12,<3.14"

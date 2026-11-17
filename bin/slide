@@ -1,5 +1,5 @@
 #!/bin/zsh
-# slide-kit
+# slide-agent
 #   slide                 編集画面を開く（サーバーが止まっていれば起動する）
 #   slide pdf  <資料>      PDF に書き出す（資料 = private/deck/ からのパス 例：営業/〇〇社_提案）
 #   slide pptx <資料>      PowerPoint で編集できる PPTX に書き出す
@@ -9,9 +9,9 @@
 #   slide stop / restart  サーバーを止める／起動し直す
 ROOT="${0:A:h:h}"
 PY="$ROOT/.venv/bin/python"
-PORT="${SLIDE_KIT_PORT:-8770}"
+PORT="${SLIDE_AGENT_PORT:-8770}"
 URL="http://127.0.0.1:$PORT"
-LOG="$HOME/Library/Logs/slide-kit.log"
+LOG="$HOME/Library/Logs/slide-agent.log"
 [[ -x "$PY" ]] || { echo "環境が無い。$ROOT/install.sh を実行して"; exit 1; }
 
 up()   { curl -fs "$URL/api/ping" >/dev/null 2>&1; }

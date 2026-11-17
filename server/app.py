@@ -1,4 +1,4 @@
-"""slide-kit のローカルサーバー（127.0.0.1 だけ）。編集画面・資料の読み書き・書き出し。"""
+"""slide-agent のローカルサーバー（127.0.0.1 だけ）。編集画面・資料の読み書き・書き出し。"""
 from __future__ import annotations
 import subprocess
 import threading
@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import decks
 
-app = FastAPI(title="slide-kit", docs_url=None, redoc_url=None)
+app = FastAPI(title="slide-agent", docs_url=None, redoc_url=None)
 EDITOR = decks.ROOT / "editor"
 _export_lock = threading.Lock()   # Chrome を同時に何個も立ち上げない
 

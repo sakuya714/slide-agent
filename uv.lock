@@ -294,7 +294,7 @@ wheels = [
 ]
 
 [[package]]
-name = "slide-kit"
+name = "slide-agent"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

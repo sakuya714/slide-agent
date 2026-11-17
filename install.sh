@@ -1,5 +1,5 @@
 #!/bin/zsh
-# slide-kit のセットアップ（Mac 用。Google Chrome が必要）
+# slide-agent のセットアップ（Mac 用。Google Chrome が必要）
 set -e
 cd "${0:A:h}"
 command -v brew >/dev/null || { echo "Homebrew を先に入れて: https://brew.sh"; exit 1; }

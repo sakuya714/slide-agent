@@ -1,4 +1,4 @@
-// slide-kit 編集画面
+// slide-agent 編集画面
 // 資料（deck.html）は iframe に読み込んで、その DOM を直接いじる。保存時に編集用の目印を全部外して書き戻す。
 
 const $ = (s) => document.querySelector(s);

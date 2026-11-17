@@ -32,7 +32,7 @@ def cmd_check(target: str) -> int:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(prog="slide", description="slide-kit")
+    ap = argparse.ArgumentParser(prog="slide", description="slide-agent")
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("serve"); s.add_argument("--port", type=int, default=8770)
     for k in ("pdf", "pptx", "check"):
