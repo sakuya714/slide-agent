@@ -1,0 +1,8 @@
+#!/bin/sh
+# slide/（資料）の中身が commit に入っていたら止める（.gitignore の書き間違い・git add -f への保険）
+# パス指定で調べる（日本語のファイル名は git が "\343…" とエスケープするので、名前の文字列では判定しない）
+if [ -n "$(git diff --cached --name-only -- slide/)" ]; then
+  echo "✖ slide/ の資料が commit に入っています。資料は GitHub に上げません。"
+  echo "  外す: git restore --staged slide/"
+  exit 1
+fi

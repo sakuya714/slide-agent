@@ -1,0 +1,19 @@
+:root {
+  /* 色（テーマ色。編集画面の「テーマ色」で変えられる） */
+  --ink: #1d2430;
+  --paper: #f7f5f0;
+  --paper2: #ece8df;
+  --accent: #b8553a;
+  --accent-soft: #f3e1d8;
+  --muted: #6b7280;
+  --muted-on-dark: #a9b1bc;
+  --dark: #141b24;
+  --dark2: #212c39;
+  --line: #ddd8ce;
+  /* フォント（画面・PDF） */
+  --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --font-serif: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  /* フォント（PPTX。相手の PC にもあるもの） */
+  --pptx-font-sans: "Yu Gothic";
+  --pptx-font-serif: "Yu Mincho";
+}

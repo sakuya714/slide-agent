@@ -1,0 +1,7 @@
+# 資料（自分だけのもの。絶対に上げない）
+/slide/
+# 環境
+.venv/
+__pycache__/
+.DS_Store
+*.log

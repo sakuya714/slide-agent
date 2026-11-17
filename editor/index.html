@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>slide-kit</title>
+<link rel="stylesheet" href="/editor/app.css">
+</head>
+<body>
+
+<header id="top">
+  <button id="menuBtn" class="icon" title="資料の一覧（⌘\）" aria-label="資料の一覧">
+    <svg viewBox="0 0 20 20" width="18" height="18"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+  </button>
+  <div class="title">
+    <span id="deckName">slide-kit</span>
+    <span id="status" class="status"></span>
+  </div>
+  <div class="grow"></div>
+  <button id="undoBtn" class="icon" title="元に戻す（⌘Z）" disabled>↶</button>
+  <button id="redoBtn" class="icon" title="やり直し（⇧⌘Z）" disabled>↷</button>
+  <span id="zoom" class="zoom"></span>
+</header>
+
+<aside id="drawer" aria-label="資料の一覧">
+  <div class="drawer-head">
+    <span class="brand">slide-kit</span>
+    <button id="closeDrawer" class="icon" aria-label="閉じる">×</button>
+  </div>
+  <nav id="tree"></nav>
+  <div class="drawer-new">
+    <button id="newBtn" class="ghost">＋ 新しい資料</button>
+    <form id="newForm" hidden>
+      <input id="newPath" placeholder="フォルダ/資料名（例：営業/〇〇社_提案）" autocomplete="off">
+      <div class="row"><button type="submit" class="primary">作る</button><button type="button" id="newCancel" class="ghost">やめる</button></div>
+    </form>
+  </div>
+  <div class="drawer-foot">
+    <div id="exportMsg" class="export-msg"></div>
+    <div class="export-btns">
+      <button id="pdfBtn" class="primary" disabled>PDF</button>
+      <button id="pptxBtn" class="primary" disabled>PPTX</button>
+    </div>
+  </div>
+</aside>
+<div id="scrim"></div>
+
+<main id="main" hidden>
+  <section id="slidesPane">
+    <div class="pane-head">
+      <button id="addSlide" class="ghost small" title="スライドを追加">＋ 追加</button>
+      <button id="dupSlide" class="icon small" title="スライドを複製（⌘D）">⧉</button>
+      <button id="delSlide" class="icon small" title="スライドを削除">🗑</button>
+    </div>
+    <div id="thumbs"></div>
+  </section>
+
+  <section id="center">
+    <div id="crumbs" class="crumbs"></div>
+    <div id="stage"><div id="frameWrap"><iframe id="frame" title="スライド"></iframe></div></div>
+    <div id="notesPane">
+      <label for="notes">発表者ノート</label>
+      <textarea id="notes" placeholder="このスライドで話すこと（PDF・スライドには出ない。PPTX ではノートになる）"></textarea>
+    </div>
+  </section>
+
+  <section id="inspector"></section>
+</main>
+
+<div id="empty">
+  <div>
+    <p class="empty-title">資料を開く</p>
+    <p class="empty-sub"><kbd>☰</kbd> から資料を選ぶか、「＋ 新しい資料」で作る。</p>
+  </div>
+</div>
+
+<div id="banner" hidden></div>
+<div id="toast"></div>
+
+<script type="module" src="/editor/app.js"></script>
+</body>
+</html>
