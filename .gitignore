@@ -1,5 +1,5 @@
 # 資料（自分だけのもの。絶対に上げない）
-/slide/
+/private/
 # 環境
 .venv/
 __pycache__/

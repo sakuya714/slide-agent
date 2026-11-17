@@ -7,16 +7,18 @@ AI が deck.html を書く → 画面で直す → AI がさらに直す → …
 ```
 
 - 正本は資料ごとに `deck.html` 1つ。AI も人も同じファイルを直す。編集画面は外からの変更を2秒以内に反映する
-- `127.0.0.1` だけで動く。資料（`slide/`）は Git に入らない（`.gitignore`＋pre-commit フック）
+- `127.0.0.1` だけで動く。自分の資料は `private/` に入り、Git には入らない（`.gitignore`＋pre-commit フック）
+- Claude Code でこのフォルダを開けば、`CLAUDE.md` から作り方を読んで資料を作れる
 
 ## 使い方
 
 ```bash
 slide                          # 編集画面を開く（☰ で資料の一覧）
-slide new 営業/〇〇社_提案       # 新しい資料
+slide new 営業/〇〇社_提案       # 新しい資料 → private/deck/営業/〇〇社_提案/deck.html
+slide open 営業/〇〇社_提案      # その資料を開く
 slide check 営業/〇〇社_提案     # はみ出し・画像切れなどを調べる
-slide pdf  営業/〇〇社_提案      # → slide/final/営業/〇〇社_提案.pdf
-slide pptx 営業/〇〇社_提案      # → slide/final/営業/〇〇社_提案.pptx
+slide pdf  営業/〇〇社_提案      # → private/final/営業/〇〇社_提案.pdf
+slide pptx 営業/〇〇社_提案      # → private/final/営業/〇〇社_提案.pptx
 slide stop / slide restart
 ```
 
@@ -29,19 +31,28 @@ git clone https://github.com/sakuya714/slide-kit.git
 cd slide-kit && ./install.sh
 ```
 
-Homebrew と Google Chrome が必要。
+Mac・Homebrew・Google Chrome が必要（Chrome は PDF・PPTX の書き出しに使う）。AI に資料を作らせるなら Claude Code。
 
 ## 構成
 
-| パス | 中身 |
-|---|---|
-| `bin/slide` | コマンド（`~/.local/bin/slide` からリンク） |
-| `server/` | ローカルサーバー（FastAPI）・資料の読み書き・CLI |
-| `editor/` | 編集画面（素の HTML / CSS / JS。ビルド不要） |
-| `theme/` | 資料の見た目（`default.css`）・テーマ色（`vars.css`）・ひな形（`new.html`） |
-| `export/` | 書き出しとチェック。Chrome で描画（Playwright）→ PDF／`extract.js` で部品を読み取り python-pptx で PPTX に置き直す |
-| `docs/` | `FORMAT.md`（deck.html の書き方）・`design.md`（設計） |
-| `slide/` | ユーザーのもの全部（Git 管理外）。`slide/deck/`＝資料の本体（サイドバーに出る）、`slide/final/`＝書き出した PDF・PPTX。どちらも中は資料ごとのフォルダ |
+```
+slide-kit/
+├── CLAUDE.md        AI（Claude Code）向けの入口：作り方の流れ・private/rules/ の読み方
+├── docs/
+│   ├── FORMAT.md      資料の書き方の共通ルール（deck.html の形・使える部品・守ること）
+│   └── design.md      設計
+├── bin/slide        slide コマンド（~/.local/bin/slide からリンク）
+├── server/          ローカルサーバー（FastAPI）・資料の読み書き・CLI
+├── editor/          編集画面（素の HTML / CSS / JS。ビルド不要）
+├── theme/           資料の見た目（default.css）・テーマ色（vars.css）・ひな形（new.html）
+├── export/          Chrome で描画（Playwright）→ PDF／部品を読み取り python-pptx で PPTX に置き直す／チェック
+├── hooks/           private/ を commit させないフック
+├── install.sh
+└── private/         ← 自分だけ（Git 管理外。install.sh が作る）
+    ├── deck/          作業中の資料（サイドバーに出る）。{フォルダ}/{資料名}/deck.html・assets/
+    ├── final/         完成品（書き出した PDF・PPTX）。deck/ と同じ階層
+    └── rules/         自分で育てる AI 向けの指示（例：rules/営業/提案書.md）
+```
 
 ## PPTX の変換
 

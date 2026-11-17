@@ -36,7 +36,7 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("serve"); s.add_argument("--port", type=int, default=8770)
     for k in ("pdf", "pptx", "check"):
-        sub.add_parser(k).add_argument("deck", help="資料（slide/deck/ からのパス 例：営業/〇〇社_提案）")
+        sub.add_parser(k).add_argument("deck", help="資料（private/deck/ からのパス 例：営業/〇〇社_提案）")
     sub.add_parser("new").add_argument("path", help="例：営業/〇〇社_提案")
     a = ap.parse_args(argv)
     try:

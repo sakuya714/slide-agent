@@ -1,17 +1,16 @@
-# deck.html の書き方（秘書向け）
+# deck.html の書き方（共通ルール）
 
-slide-kit の資料は `slide/deck/{フォルダ}/{資料名}/deck.html` の1ファイル（画像は同じフォルダの `assets/`）。書き出しは `slide/final/{フォルダ}/{資料名}.pdf|.pptx`。秘書はこの決まりで書く。ユーザーは編集画面（`slide`）で同じファイルを直す。
+AI が資料（`private/deck/{フォルダ}/{資料名}/deck.html`）を書くときの、全員共通の決まり。作る流れは `CLAUDE.md`、資料ごとの追加ルールは `private/rules/`。
 
-## 1. 作り方の流れ
+| 書いてあること | 節 |
+|---|---|
+| ファイルの形 | 1 |
+| スライドの形 | 2 |
+| 使える部品（テーマのクラス） | 3 |
+| 守ること（チェックで止まるもの） | 4 |
+| PPTX になるとき | 5 |
 
-1. `slide new {フォルダ}/{資料名}` でひな形を作る（テーマが埋め込まれた deck.html と `assets/` ができる）
-2. `<body>` の中の `<section class="slide">` を書き換える・足す
-3. `slide check {フォルダ}/{資料名}` を通す。**エラー（✖）が0になるまで直す**。注意（△）は理由があれば残してよい
-4. ユーザーに「`slide` で開いて」と伝える。PDF・PPTX が必要なら `slide pdf` / `slide pptx` で書き出す（`slide/final/` に出る）
-
-既存の資料を直すときも、同じ deck.html を直接書き換えてよい。編集画面が開いていれば2秒以内に反映される。
-
-## 2. ファイルの形
+## 1. ファイルの形
 
 ```html
 <!doctype html>
@@ -37,7 +36,7 @@ slide-kit の資料は `slide/deck/{フォルダ}/{資料名}/deck.html` の1フ
 - 外部の CSS・JS・Web フォントは読み込まない（PDF・PPTX がずれる。オフラインで開けなくなる）
 - 画像は `assets/` に置いて `src="assets/xxx.jpg"` で参照する。PNG・JPEG を使う（WebP は PPTX で PNG に変換される。SVG は PPTX で画像になる）
 
-## 3. スライド
+## 2. スライドの形
 
 ```html
 <section class="slide" data-bg="dark" data-align="center">
@@ -53,7 +52,7 @@ slide-kit の資料は `slide/deck/{フォルダ}/{資料名}/deck.html` の1フ
 
 大きさは 1280×720 固定。余白は上下 72px・左右 88px。中身は上から縦に並ぶ（`gap: 20px`）。
 
-## 4. 部品（テーマのクラス）
+## 3. 使える部品（テーマのクラス）
 
 | 書き方 | 見た目 |
 |---|---|
@@ -77,7 +76,7 @@ slide-kit の資料は `slide/deck/{フォルダ}/{資料名}/deck.html` の1フ
 | `<div class="spacer"></div>` | 残りの高さを埋める（下に寄せたいものの前に） |
 | `<div class="footer"><span>左</span><span>右</span></div>` | 下の帯（資料名・ページ番号） |
 
-## 5. 守ること（チェックで止まるもの・注意が出るもの）
+## 4. 守ること（チェックで止まるもの・注意が出るもの）
 
 | ルール | 理由 |
 |---|---|
@@ -90,7 +89,7 @@ slide-kit の資料は `slide/deck/{フォルダ}/{資料名}/deck.html` の1フ
 
 `style` 属性は「大きさの微調整（`font-size`・`margin-top`・`height` など）」だけに使う。並べ方はクラスで書く。
 
-## 6. PPTX になるとき
+## 5. PPTX になるとき
 
 | HTML | PowerPoint |
 |---|---|

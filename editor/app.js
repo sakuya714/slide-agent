@@ -132,7 +132,7 @@ async function save({ force = false } = {}) {
   }
 }
 
-// 秘書（や別の画面）がファイルを直したら反映する
+// AI（や別の画面）がファイルを直したら反映する
 async function poll() {
   if (!S.path || S.saving || document.hidden) return;
   try {
@@ -148,7 +148,7 @@ function showConflict() {
   S.conflict = true;
   const b = $('#banner');
   b.replaceChildren(
-    el('span', {}, 'この資料が外で変更されました（秘書が直した等）。'),
+    el('span', {}, 'この資料が外で変更されました（AI が直した等）。'),
     el('button', { class: 'primary', onclick: () => { S.conflict = false; hideBanner(); openDeck(S.path, { keepPlace: true }); } }, '外の変更を読み込む'),
     el('button', { onclick: () => { S.conflict = false; hideBanner(); save({ force: true }); } }, 'この画面の内容で上書き'),
   );
@@ -595,7 +595,7 @@ async function loadTree() {
     } }, el('span', { class: 'caret' }, '▶'), it.name), it.children.length ? build(it.children) : el('ul', {}, el('li', { class: 'empty' }, '（空）')));
     return li;
   }));
-  nav.replaceChildren(items.length ? build(items) : el('p', { class: 'empty' }, 'slide/ に資料がまだ無い。下の「＋ 新しい資料」で作る。'));
+  nav.replaceChildren(items.length ? build(items) : el('p', { class: 'empty' }, 'private/deck/ に資料がまだ無い。下の「＋ 新しい資料」で作る。'));
   markTree();
 }
 function markTree() {
@@ -653,7 +653,7 @@ async function doExport(kind) {
     const extra = r.raster ? `・画像になった部分 ${r.raster}` : '';
     msg.replaceChildren(
       el('div', {}, `✔ ${kind.toUpperCase()}（${r.slides}枚${extra}）`),
-      el('div', { class: 'muted-note' }, `slide/${r.rel}`),
+      el('div', { class: 'muted-note' }, `private/${r.rel}`),
       el('button', { class: 'small', onclick: () => api('POST', '/api/reveal', { out: r.out }) }, 'Finder で表示'),
     );
   } catch (e) {

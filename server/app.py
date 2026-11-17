@@ -88,7 +88,7 @@ def export(body: dict = Body(...)):
         fail(e)
     except Exception as e:  # 変換の失敗は画面に出す
         fail(RuntimeError(f"書き出しに失敗: {e}"), 500)
-    return {"out": str(out), "rel": str(out.relative_to(decks.SLIDE)), **info}
+    return {"out": str(out), "rel": str(out.relative_to(decks.PRIVATE)), **info}
 
 
 @app.post("/api/check")

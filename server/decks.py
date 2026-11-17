@@ -1,12 +1,12 @@
-"""資料（slide/ 配下）の読み書き。パスは必ず slide/ の中に閉じる。"""
+"""資料（private/deck/ 配下）の読み書き。パスは必ず private/deck/ の中に閉じる。"""
 from __future__ import annotations
 import os, re, shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent          # slide-kit/
-SLIDE = Path(os.environ.get("SLIDE_KIT_HOME", ROOT / "slide")).resolve()   # ユーザーのもの全部（Git 管理外）
-DECKS = SLIDE / "deck"                                 # 資料の本体（サイドバーに出るのはここ）
-OUTPUT = SLIDE / "final"                               # 完成品：書き出した PDF・PPTX（中は資料ごと）
+PRIVATE = Path(os.environ.get("SLIDE_KIT_PRIVATE", ROOT / "private")).resolve()   # ユーザーのもの全部（Git 管理外）
+DECKS = PRIVATE / "deck"                                 # 資料の本体（サイドバーに出るのはここ）
+OUTPUT = PRIVATE / "final"                               # 完成品：書き出した PDF・PPTX（中は資料ごと）
 THEME = ROOT / "theme"
 DECK_FILE = "deck.html"
 BAK_FILE = ".deck.bak.html"
@@ -17,16 +17,16 @@ class DeckError(Exception):
 
 
 def safe(rel: str) -> Path:
-    """slide/deck/ からの相対パス → 絶対パス。外に出るものは拒否。"""
+    """private/deck/ からの相対パス → 絶対パス。外に出るものは拒否。"""
     rel = (rel or "").strip().strip("/")
     p = (DECKS / rel).resolve()
     if p != DECKS and DECKS not in p.parents:
-        raise DeckError(f"slide/deck/ の外は開けない: {rel}")
+        raise DeckError(f"private/deck/ の外は開けない: {rel}")
     return p
 
 
 def resolve_deck(arg: str) -> Path:
-    """CLI 用：資料フォルダ・deck.html の絶対パス、または slide/deck/ からの相対パス → 資料フォルダ。"""
+    """CLI 用：資料フォルダ・deck.html の絶対パス、または private/deck/ からの相対パス → 資料フォルダ。"""
     p = Path(arg).expanduser()
     if not p.is_absolute():
         p = (Path.cwd() / p) if (Path.cwd() / p).exists() else DECKS / arg
@@ -116,7 +116,7 @@ def new(rel: str) -> str:
 
 
 def output_path(deck_dir: Path, ext: str) -> Path:
-    """書き出し先：slide/final/ の中に、資料と同じ階層で。"""
+    """書き出し先：private/final/ の中に、資料と同じ階層で。"""
     rel = Path(rel_of(deck_dir))
     out = OUTPUT / rel.parent / f"{rel.name}.{ext}"
     out.parent.mkdir(parents=True, exist_ok=True)

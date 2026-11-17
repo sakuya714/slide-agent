@@ -1,8 +1,9 @@
 #!/bin/zsh
 # slide-kit
 #   slide                 編集画面を開く（サーバーが止まっていれば起動する）
-#   slide pdf  <資料>      PDF に書き出す（資料 = slide/deck/ からのパス 例：営業/〇〇社_提案）
+#   slide pdf  <資料>      PDF に書き出す（資料 = private/deck/ からのパス 例：営業/〇〇社_提案）
 #   slide pptx <資料>      PowerPoint で編集できる PPTX に書き出す
+#   slide open <資料>      その資料を開く
 #   slide check <資料>     はみ出し・画像切れなどを調べる
 #   slide new <フォルダ/資料名>   新しい資料を作る
 #   slide stop / restart  サーバーを止める／起動し直す
