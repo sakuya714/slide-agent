@@ -15,7 +15,7 @@ AI が作る ──→ ユーザーが直す ──→ AI がさらに直す ─
 
 - 正本は資料ごとに **deck.html 1つだけ**。AI もユーザーも同じファイルを直す。PDF・PPTX は毎回そこから作るコピー
 - Mac の中だけで動く（`127.0.0.1`）。GitHub Pages では公開しない（保存・書き出しにサーバーが要る／資料は誰にも見せない）
-- 作り方の知識は2段：全員共通の `docs/FORMAT.md` と、ユーザーが育てる `private/rules/`
+- 作り方の知識は2段：全員共通の `CLAUDE.md`（リポジトリ）と、ユーザーが育てる `private/rules/`
 
 ### 作らないもの
 クラウド保存・共同編集／スマホでの編集／アニメーションの書き出し／Google スライド・Keynote への書き出し／GitHub Pages での公開
@@ -26,8 +26,7 @@ AI が作る ──→ ユーザーが直す ──→ AI がさらに直す ─
 
 ```
 slide-kit/                     ← GitHub（public）。上がるのはアプリだけ
-├── CLAUDE.md                  AI 向けの入口（作る流れ・rules の読み方・守ること）
-├── docs/FORMAT.md             書き方の共通ルール（形・部品・守ること）
+├── CLAUDE.md                  AI 向けの説明書（作る流れ・deck.html の書き方・rules の読み方。作り方は全部ここ）
 ├── docs/design.md             これ
 ├── bin/slide                  コマンド（~/.local/bin/slide からリンク）
 ├── server/                    ローカルサーバー（Python / FastAPI）・CLI
@@ -102,7 +101,7 @@ slide-kit/                     ← GitHub（public）。上がるのはアプリ
 ## 5. 仕組み
 
 ### 5-1. deck.html
-- 1スライド＝1つの `<section class="slide">`（1280×720 固定）。詳しい書き方は `docs/FORMAT.md`
+- 1スライド＝1つの `<section class="slide">`（1280×720 固定）。詳しい書き方は `CLAUDE.md`
 - `<style data-kit="theme">`（テーマ。資料に埋め込むので、このファイル1つで表示できる）と `<style data-kit="vars">`（テーマ色）を持つ
 - 編集画面が付ける目印（選択中・編集中など）は保存時に全部外す。AI が読む deck.html はいつもきれいな HTML のまま
 

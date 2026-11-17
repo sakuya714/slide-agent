@@ -37,9 +37,8 @@ Mac・Homebrew・Google Chrome が必要（Chrome は PDF・PPTX の書き出し
 
 ```
 slide-kit/
-├── CLAUDE.md        AI（Claude Code）向けの入口：作り方の流れ・private/rules/ の読み方
+├── CLAUDE.md        AI（Claude Code）向けの説明書：作る流れ・deck.html の書き方・private/rules/ の読み方（作り方は全部ここ）
 ├── docs/
-│   ├── FORMAT.md      資料の書き方の共通ルール（deck.html の形・使える部品・守ること）
 │   └── design.md      設計
 ├── bin/slide        slide コマンド（~/.local/bin/slide からリンク）
 ├── server/          ローカルサーバー（FastAPI）・資料の読み書き・CLI
