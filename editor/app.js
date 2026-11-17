@@ -90,25 +90,50 @@ const LAYOUTS = [
 </section>`],
 ];
 
-// 挿入できる部品（テーマのクラス）
-const INSERTS = [
-  { header: '文字' },
-  ['見出し', '<h2>見出し</h2>'],
-  ['小見出し', '<h3>小見出し</h3>'],
-  ['本文', '<p>本文</p>'],
-  ['箇条書き', '<ul>\n  <li>項目</li>\n  <li>項目</li>\n</ul>'],
-  ['ラベル（見出しの上の小さい文字）', '<p class="eyebrow">ラベル</p>'],
-  ['縦線つきの文（言いたいこと）', '<p class="bar">伝えたいこと</p>'],
-  ['タグ', '<span class="tag">タグ</span>'],
-  { header: '並び' },
-  ['カード2つ', '<div class="grid cols-2">\n  <div class="card"><h3>1つ目</h3><p>説明</p></div>\n  <div class="card"><h3>2つ目</h3><p>説明</p></div>\n</div>'],
-  ['カード3つ', '<div class="grid cols-3">\n  <div class="card"><h3>1つ目</h3><p>説明</p></div>\n  <div class="card"><h3>2つ目</h3><p>説明</p></div>\n  <div class="card"><h3>3つ目</h3><p>説明</p></div>\n</div>'],
-  ['数字3つ', '<div class="grid cols-3">\n  <div class="stat"><span class="num">120</span><span class="label">説明</span></div>\n  <div class="stat"><span class="num">45%</span><span class="label">説明</span></div>\n  <div class="stat"><span class="num">3倍</span><span class="label">説明</span></div>\n</div>'],
-  { header: 'その他' },
-  ['画像…', null, 'image'],
-  ['余白（後ろを下に寄せる）', '<div class="spacer"></div>'],
-  ['下の帯（資料名・ページ）', '<div class="footer"><span>資料名</span><span>1</span></div>'],
-];
+// 挿入できる部品（テーマのクラス）。上の帯の「文字」「カード」のメニュー
+const INSERTS = {
+  text: [
+    ['見出し', '<h2>見出し</h2>'],
+    ['小見出し', '<h3>小見出し</h3>'],
+    ['本文', '<p>本文</p>'],
+    ['箇条書き', '<ul>\n  <li>項目</li>\n  <li>項目</li>\n</ul>'],
+    '-',
+    ['ラベル（見出しの上の小さい文字）', '<p class="eyebrow">ラベル</p>'],
+    ['縦線つきの文（言いたいこと）', '<p class="bar">伝えたいこと</p>'],
+    ['タグ', '<span class="tag">タグ</span>'],
+  ],
+  block: [
+    ['カード2つ', '<div class="grid cols-2">\n  <div class="card"><h3>1つ目</h3><p>説明</p></div>\n  <div class="card"><h3>2つ目</h3><p>説明</p></div>\n</div>'],
+    ['カード3つ', '<div class="grid cols-3">\n  <div class="card"><h3>1つ目</h3><p>説明</p></div>\n  <div class="card"><h3>2つ目</h3><p>説明</p></div>\n  <div class="card"><h3>3つ目</h3><p>説明</p></div>\n</div>'],
+    ['数字3つ', '<div class="grid cols-3">\n  <div class="stat"><span class="num">120</span><span class="label">説明</span></div>\n  <div class="stat"><span class="num">45%</span><span class="label">説明</span></div>\n  <div class="stat"><span class="num">3倍</span><span class="label">説明</span></div>\n</div>'],
+    '-',
+    ['余白（後ろを下に寄せる）', '<div class="spacer"></div>'],
+    ['下の帯（資料名・ページ）', '<div class="footer"><span>資料名</span><span>1</span></div>'],
+  ],
+};
+
+// 画面のアイコン（20×20、線で描く）。HTML 側は data-icon="名前" で入る
+const ICONS = {
+  undo: '<path d="M7.5 5 3.5 9l4 4M4 9h7.5a4.5 4.5 0 0 1 0 9H9"/>',
+  redo: '<path d="m12.5 5 4 4-4 4M16 9H8.5a4.5 4.5 0 0 0 0 9H11"/>',
+  plus: '<path d="M10 4.5v11M4.5 10h11"/>',
+  copy: '<rect x="7" y="7" width="9.5" height="9.5" rx="1.6"/><path d="M13 7V5a1.5 1.5 0 0 0-1.5-1.5h-6A1.5 1.5 0 0 0 4 5v6a1.5 1.5 0 0 0 1.5 1.5H7"/>',
+  trash: '<path d="M4 6h12M8 6V4.3h4V6M5.6 6l.7 9.6a1 1 0 0 0 1 .9h5.4a1 1 0 0 0 1-.9L14.4 6"/>',
+  up: '<path d="M10 15.5v-11M5.5 9 10 4.5 14.5 9"/>',
+  down: '<path d="M10 4.5v11M5.5 11 10 15.5 14.5 11"/>',
+  text: '<path d="M4.5 5.5V4h11v1.5M10 4v12M7.5 16h5"/>',
+  card: '<rect x="3" y="4.5" width="14" height="11" rx="2"/><path d="M6 8.5h5M6 11.5h8"/>',
+  image: '<rect x="3" y="4" width="14" height="12" rx="1.6"/><circle cx="7.3" cy="8" r="1.3"/><path d="m3.5 14 4-3.8 3 2.8 2.2-2 3.8 3.5"/>',
+  grid: '<rect x="3" y="3.5" width="6" height="5.5" rx="1"/><rect x="11" y="3.5" width="6" height="5.5" rx="1"/><rect x="3" y="11" width="6" height="5.5" rx="1"/><rect x="11" y="11" width="6" height="5.5" rx="1"/>',
+  play: '<path d="M6.5 4.5v11l8.5-5.5z" fill="currentColor"/>',
+  more: '<circle cx="4.5" cy="10" r=".6"/><circle cx="10" cy="10" r=".6"/><circle cx="15.5" cy="10" r=".6"/>',
+  caret: '<path d="m6.5 8.5 3.5 3.5 3.5-3.5"/>',
+};
+function icon(name, size = 18) {
+  const t = document.createElement('template');
+  t.innerHTML = `<svg class="ic ic-${name}" viewBox="0 0 20 20" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>`;
+  return t.content.firstChild;
+}
 
 const NAMES = { h1: '大見出し', h2: '見出し', h3: '小見出し', p: '本文', li: '項目', ul: '箇条書き', ol: '番号付き', img: '画像', div: '箱', span: '文字', em: '強調', strong: '太字', b: '太字', section: 'スライド', svg: '図', table: '表', small: '小さい文字', br: '改行', a: 'リンク', figure: '図', aside: 'ノート' };
 const CLASS_NAMES = { eyebrow: 'ラベル', card: 'カード', stat: '数字', num: '数字', label: '説明', tag: 'タグ', footer: '下の帯', grid: '並び', split: '左右', bar: '縦線つきの文', lead: 'リード文', photo: '写真', bg: '背景画像', shade: '暗幕', row: '横並び', spacer: '余白' };
@@ -516,11 +541,13 @@ function makeThumb(s, i, { onOpen }) {
 function renderThumbs() {
   const all = slides();
   $('#thumbs').replaceChildren(...all.map((s, i) => makeThumb(s, i, { onOpen: (j) => { S.focus = 'thumbs'; showSlide(j); $('#thumbs').focus({ preventScroll: true }); } })));
-  $('#slideCount').textContent = `${all.length} 枚`;
   markThumbs();
 }
 const clearDrop = () => $$('.drop-before, .drop-after').forEach((x) => x.classList.remove('drop-before', 'drop-after'));
 function markThumbs() {
+  const n = slides().length;
+  $('#slideCount').textContent = n ? `${S.cur + 1} / ${n}` : '';
+  $('#slideDelBtn').disabled = n <= 1;
   $$('#thumbs .thumb, #sorter .thumb').forEach((t) => t.classList.toggle('current', Number(t.dataset.i) === S.cur));
   $$('.thumb.current').forEach((t) => t.scrollIntoView({ block: 'nearest' }));
 }
@@ -572,7 +599,6 @@ function select(node) {
   S.doc?.querySelectorAll('[data-kit-sel]').forEach((e) => e.removeAttribute('data-kit-sel'));
   S.sel = node;
   if (node) node.setAttribute('data-kit-sel', '');
-  renderCrumbs();
   renderInspector();
 }
 function textTarget(node) {
@@ -688,24 +714,18 @@ function bindFrame(doc) {
 }
 const hasFiles = (e) => [...(e.dataTransfer?.types || [])].includes('Files');
 
-function renderCrumbs() {
-  const c = $('#crumbs');
-  c.replaceChildren();
-  if (!S.doc) return;
-  if (!S.sel) {
-    c.append(el('span', { class: 'hint' }, 'クリックで選ぶ ・ ダブルクリックで文字を直す ・ 右クリックでメニュー ・ 画像はドラッグで置ける'));
-    return;
-  }
+// 選んでいる部品の場所（スライド › カード › 見出し）。押すとその親を選べる
+function crumbs(n) {
   const chain = [];
-  for (let n = S.sel; n && n.nodeType === 1; n = n.parentElement) {
-    chain.unshift(n);
-    if (isSlide(n)) break;
+  for (let x = n.parentElement; x && x.nodeType === 1; x = x.parentElement) {
+    chain.unshift(x);
+    if (isSlide(x)) break;
   }
-  chain.forEach((n, i) => {
-    if (i) c.append(el('span', { class: 'sep' }, '›'));
-    const label = isSlide(n) ? `スライド ${S.cur + 1}` : nameOf(n);
-    c.append(el('button', { class: i === chain.length - 1 ? 'last' : '', onclick: () => select(n) }, label));
-  });
+  const c = el('div', { class: 'crumbs' });
+  chain.forEach((x) => c.append(
+    el('button', { title: 'この親を選ぶ（Esc）', onclick: () => select(x) }, isSlide(x) ? `スライド ${S.cur + 1}` : nameOf(x)),
+    el('span', { class: 'sep' }, '›')));
+  return c;
 }
 function nameOf(n) {
   const tag = n.tagName.toLowerCase();
@@ -890,8 +910,13 @@ function swatchRow(current, onPick, { transparent = false } = {}) {
     box.append(el('button', { class: 'sw' + (current === val ? ' on' : ''), title: varLabel(v.name), style: `background:${v.value}`, onclick: () => onPick(val) }));
   }
   if (transparent) box.append(el('button', { class: 'sw clear' + (current === 'transparent' ? ' on' : ''), title: '透明', onclick: () => onPick('transparent') }, '∅'));
-  if (current) box.append(el('button', { class: 'link', title: 'テーマの見た目に戻す', onclick: () => onPick('') }, '元に戻す'));
   return box;
+}
+// 色は見本が多いので、ラベルを上に置いて横幅いっぱいに並べる。直していれば右に「↺」
+function colorField(label, current, onPick, opts) {
+  return el('div', { class: 'field stack' },
+    el('label', {}, label, current ? el('button', { class: 'link', title: 'テーマの見た目に戻す', onclick: () => onPick('') }, '↺ 戻す') : null),
+    swatchRow(current, onPick, opts));
 }
 function field(label, ...kids) { return el('div', { class: 'field' }, el('label', {}, label), el('div', {}, ...kids)); }
 function seg(options, current, onPick) {
@@ -917,22 +942,26 @@ function renderInspector() {
   box.querySelectorAll('button').forEach((b) => b.addEventListener('mousedown', (e) => e.preventDefault()));
 }
 
+function iconBtn(name, title, run, { disabled = false, danger = false } = {}) {
+  return el('button', { class: 'icon' + (danger ? ' danger' : ''), title, disabled, onclick: run }, icon(name));
+}
 function elementPanel(n) {
   const out = [];
+  const last = !n.nextElementSibling || n.nextElementSibling.matches('aside.notes');
   out.push(el('div', { class: 'ins-head' },
-    el('div', { class: 'ins-title' }, nameOf(n), el('span', { class: 'what' }, `<${n.tagName.toLowerCase()}${n.classList.length ? '.' + [...n.classList].join('.') : ''}>`)),
-    el('div', { class: 'ins-actions' },
-      el('button', { title: '前へ（⌥↑）', onclick: () => moveEl(-1), disabled: !n.previousElementSibling }, '↑ 前へ'),
-      el('button', { title: '後ろへ（⌥↓）', onclick: () => moveEl(1), disabled: !n.nextElementSibling || n.nextElementSibling.matches('aside.notes') }, '↓ 後ろへ'),
-      el('button', { title: '複製（⌘D）', onclick: dupEl }, '複製'),
-      el('button', { class: 'danger', title: '削除（⌫）', onclick: delEl }, '削除'))));
+    crumbs(n),
+    el('div', { class: 'ins-title' }, el('span', {}, nameOf(n)),
+      el('div', { class: 'ins-actions' },
+        iconBtn('up', '前へ（⌥↑）', () => moveEl(-1), { disabled: !n.previousElementSibling }),
+        iconBtn('down', '後ろへ（⌥↓）', () => moveEl(1), { disabled: last }),
+        iconBtn('copy', '複製（⌘D）', dupEl),
+        iconBtn('trash', '削除（⌫）', delEl, { danger: true })))));
 
   if (S.editing) {
     out.push(sec('書式（選んだ文字）',
       el('div', { class: 'fmt' },
         el('button', { title: '⌘B', onclick: () => wrapInline('strong') }, el('b', {}, '太字')),
-        el('button', { title: '⌘I（アクセント色になる）', onclick: () => wrapInline('em') }, '強調')),
-      el('p', { class: 'muted-note' }, 'Enter で改行 ・ Esc で終わる')));
+        el('button', { title: '⌘I（アクセント色になる）', onclick: () => wrapInline('em') }, '強調'))));
   }
 
   const cs = cssOf(n);
@@ -940,8 +969,7 @@ function elementPanel(n) {
     const fitMode = cs.objectFit === 'contain' ? 'contain' : 'cover';
     out.push(sec('画像',
       field('合わせ方', seg([['cover', '切り抜く'], ['contain', '全体を見せる']], fitMode, (v) => styleChange(n, 'objectFit', v === 'cover' ? '' : v))),
-      el('div', { class: 'fmt' }, el('button', { onclick: () => pickImage(n) }, '画像を差し替え…')),
-      el('p', { class: 'muted-note' }, 'ファイルをこの画像の上にドラッグしても差し替えられる。')));
+      el('div', { class: 'fmt' }, el('button', { title: 'ファイルをこの画像の上にドラッグしても差し替えられる', onclick: () => pickImage(n) }, '画像を差し替え…'))));
   } else if (!n.matches('svg, br')) {
     const size = Math.round(parseFloat(cs.fontSize));
     const inp = el('input', { type: 'number', min: '8', max: '200', value: String(size) });
@@ -949,7 +977,7 @@ function elementPanel(n) {
     const bold = parseInt(cs.fontWeight, 10) >= 600;
     const al = cs.textAlign === 'start' ? 'left' : cs.textAlign;
     out.push(sec('文字',
-      field('色', swatchRow(n.style.color, (v) => styleChange(n, 'color', v))),
+      colorField('色', n.style.color, (v) => styleChange(n, 'color', v)),
       field('大きさ', el('div', { class: 'num-in' },
         el('button', { onclick: () => styleChange(n, 'fontSize', `${Math.max(8, size - 2)}px`) }, '−'),
         inp,
@@ -958,44 +986,35 @@ function elementPanel(n) {
       field('太さ', seg([['400', '標準'], ['700', '太字']], bold ? '700' : '400', (v) => styleChange(n, 'fontWeight', v))),
       field('揃え', seg([['left', '左'], ['center', '中央'], ['right', '右']], al, (v) => styleChange(n, 'textAlign', v)))));
   }
-  out.push(sec('箱', field('背景色', swatchRow(n.style.backgroundColor, (v) => styleChange(n, 'backgroundColor', v), { transparent: true }))));
-  out.push(sec('そのほか', el('div', { class: 'fmt' }, el('button', { onclick: () => editHTML(n) }, 'HTML を編集…'))));
+  out.push(sec('箱', colorField('背景色', n.style.backgroundColor, (v) => styleChange(n, 'backgroundColor', v), { transparent: true })));
+  out.push(el('div', { class: 'ins-foot' }, el('button', { class: 'link', onclick: () => editHTML(n) }, 'HTML を編集…')));
   return out;
 }
 
 function slidePanel(slide) {
   const out = [];
-  const total = slides().length;
   const dark = slide.getAttribute('data-bg') === 'dark';
   const center = slide.getAttribute('data-align') === 'center';
-  out.push(el('div', { class: 'ins-head' },
-    el('div', { class: 'ins-title' }, `スライド ${S.cur + 1}`, el('span', { class: 'what' }, `全 ${total} 枚`)),
-    el('div', { class: 'ins-actions' },
-      el('button', { onclick: () => moveSlide(S.cur, S.cur - 1), disabled: S.cur === 0 }, '↑ 上へ'),
-      el('button', { onclick: () => moveSlide(S.cur, S.cur + 1), disabled: S.cur === total - 1 }, '↓ 下へ'),
-      el('button', { title: '⌘D', onclick: () => dupSlide() }, '複製'),
-      el('button', { class: 'danger', onclick: () => delSlide(), disabled: total <= 1 }, '削除'))));
+  out.push(el('div', { class: 'ins-head slim' }, el('div', { class: 'ins-title' }, el('span', {}, `スライド ${S.cur + 1}`))));
   out.push(sec('背景',
     field('地', seg([['light', '明るい'], ['dark', '暗い']], dark ? 'dark' : 'light', (v) => {
       v === 'dark' ? slide.setAttribute('data-bg', 'dark') : slide.removeAttribute('data-bg');
       commit(); renderInspector();
     })),
-    field('色', swatchRow(slide.style.backgroundColor, (v) => styleChange(slide, 'backgroundColor', v)))));
-  out.push(sec('中身の位置',
-    field('縦', seg([['top', '上から'], ['center', '中央']], center ? 'center' : 'top', (v) => {
+    colorField('色', slide.style.backgroundColor, (v) => styleChange(slide, 'backgroundColor', v))));
+  out.push(sec('中身',
+    field('縦の位置', seg([['top', '上から'], ['center', '中央']], center ? 'center' : 'top', (v) => {
       v === 'center' ? slide.setAttribute('data-align', 'center') : slide.removeAttribute('data-align');
       commit(); renderInspector();
     }))));
-  const list = (S.issues || []).filter((x) => x.slide === S.cur + 1);
   if (S.issues) {
+    const list = S.issues.filter((x) => x.slide === S.cur + 1);
     out.push(sec('チェック' + (S.issuesStale ? '（直したあとは、もう一度チェック）' : ''),
       list.length
         ? el('ul', { class: 'issues' }, list.map((x) => el('li', { class: x.level }, x.msg, el('span', { class: 'where' }, x.where))))
-        : el('p', { class: 'muted-note' }, 'このスライドに問題は無い。')));
+        : el('p', { class: 'muted-note' }, '問題なし')));
   }
-  out.push(sec('そのほか',
-    el('div', { class: 'fmt' }, el('button', { onclick: () => editHTML(slide) }, 'スライドの HTML を編集…')),
-    el('p', { class: 'muted-note' }, 'スライドの中をクリックすると、その部品の書式がここに出る。')));
+  out.push(el('div', { class: 'ins-foot' }, el('button', { class: 'link', onclick: () => editHTML(slide) }, 'スライドの HTML を編集…')));
   return out;
 }
 
@@ -1139,7 +1158,7 @@ document.addEventListener('mousedown', (e) => {
 
 function openLayoutMenu(anchor, at = S.cur + 1) {
   if (S.editing) endEdit();
-  const m = [{ header: 'レイアウトを選ぶ（いまのテーマ色で表示）' }];
+  const m = [{ header: 'レイアウト' }];
   for (const [name, html] of LAYOUTS) {
     const f = el('iframe', { tabindex: '-1', 'aria-hidden': 'true' });
     f.srcdoc = thumbHTML(fromHTML(html)[0]);
@@ -1151,11 +1170,8 @@ function openLayoutMenu(anchor, at = S.cur + 1) {
     openMenu(null, m, { x: r.right + 4, y: r.top + 40, cls: 'layouts' });
   }
 }
-function insertMenu() {
-  return INSERTS.map((it) => (it.header ? it : {
-    label: it[0],
-    run: () => (it[2] === 'image' ? pickImage(S.sel?.matches?.('img') ? S.sel : null) : insertPart(it[1])),
-  }));
+function insertMenu(kind) {
+  return INSERTS[kind].map((it) => (it === '-' ? it : { label: it[0], run: () => insertPart(it[1]) }));
 }
 function zoomMenu() {
   const z = [['fit', '画面に合わせる'], [0.5, '50%'], [0.75, '75%'], [1, '100%'], [1.5, '150%']];
@@ -1350,14 +1366,6 @@ $('#notes').addEventListener('input', () => {
   a.textContent = $('#notes').value;
   commitNotes();
 });
-function setNotes(on) {
-  document.body.classList.toggle('notes-off', !on);
-  $('#notesToggle').classList.toggle('on', on);
-  store.set('kit.notes', on);
-  requestAnimationFrame(fit);
-}
-$('#notesToggle').onclick = () => setNotes(document.body.classList.contains('notes-off'));
-setNotes(store.get('kit.notes', true));
 
 // ---------- キー操作 ----------
 function onKey(e) {
@@ -1424,6 +1432,7 @@ function fit() {
   $('#frameWrap').style.height = `${720 * k}px`;
   $('#frame').style.transform = `scale(${k})`;
   $('#zoomLabel').textContent = `${Math.round(k * 100)}%`;
+  $('#notes').style.width = `${Math.min(1280 * k, w)}px`;   // ノートの幅をスライドにそろえる
 }
 new ResizeObserver(fit).observe($('#stage'));
 
@@ -1431,8 +1440,12 @@ new ResizeObserver(fit).observe($('#stage'));
 $('#homeBtn').onclick = showHome;
 $('#undoBtn').onclick = undo;
 $('#redoBtn').onclick = redo;
-$('#addSlideBtn').onclick = (e) => openLayoutMenu(e.currentTarget);
-$('#insertBtn').onclick = (e) => openMenu(e.currentTarget, insertMenu());
+$('#textBtn').onclick = (e) => openMenu(e.currentTarget, insertMenu('text'));
+$('#blockBtn').onclick = (e) => openMenu(e.currentTarget, insertMenu('block'));
+$('#imageBtn').onclick = () => pickImage(S.sel?.matches?.('img') ? S.sel : null);
+$('#slideAddBtn').onclick = (e) => openLayoutMenu(e.currentTarget);
+$('#slideDupBtn').onclick = () => dupSlide();
+$('#slideDelBtn').onclick = () => delSlide();
 $('#viewBtn').onclick = () => toggleGrid();
 $('#zoomBtn').onclick = (e) => openMenu(e.currentTarget, zoomMenu());
 $('#checkBtn').onclick = () => (S.menuAnchor === $('#checkBtn') ? closeMenu() : runCheck());
@@ -1445,6 +1458,8 @@ $('#homeSearch').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !
 $('#thumbs').addEventListener('focus', () => { S.focus = 'thumbs'; });
 
 // ---------- 起動 ----------
+$$('[data-icon]').forEach((b) => b.prepend(icon(b.dataset.icon, b.classList.contains('icon') ? 18 : 16)));
+$$('.has-menu').forEach((b) => b.append(icon('caret', 14)));
 window.addEventListener('beforeunload', (e) => { if (S.dirty) { save(); e.preventDefault(); } });
 setInterval(poll, 2000);
 window.addEventListener('hashchange', () => {

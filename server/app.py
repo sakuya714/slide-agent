@@ -11,6 +11,15 @@ from fastapi.staticfiles import StaticFiles
 from . import decks
 
 app = FastAPI(title="slide-agent", docs_url=None, redoc_url=None)
+
+
+@app.middleware("http")
+async def no_stale_editor(request: Request, call_next):
+    """編集画面の JS・CSS を古いキャッシュのまま使わない（直したあと再読み込みで必ず新しくなる）。"""
+    res = await call_next(request)
+    if request.url.path.startswith("/editor/"):
+        res.headers["Cache-Control"] = "no-cache"
+    return res
 EDITOR = decks.ROOT / "editor"
 _export_lock = threading.Lock()   # Chrome を同時に何個も立ち上げない
 

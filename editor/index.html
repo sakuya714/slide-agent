@@ -8,57 +8,40 @@
 </head>
 <body class="mode-home">
 
-<!-- 上の帯：左＝資料名と保存状態／中＝編集の道具／右＝確かめる・見せる・書き出す -->
+<!-- 上の帯：左＝資料名と保存状態／中央＝編集の道具／右＝確かめる・見せる・書き出す。アイコンは app.js の ICONS から入る -->
 <header id="top">
-  <button id="homeBtn" class="brand" title="資料の一覧（⌘O）">slide-agent</button>
-  <div class="doc-title doc-only">
-    <span id="deckFolder" class="folder"></span>
-    <span id="deckName"></span>
-    <span id="status" class="status"></span>
+  <div class="top-left">
+    <button id="homeBtn" class="brand" title="資料の一覧（⌘O）">slide-agent</button>
+    <div class="doc-title doc-only">
+      <span id="deckFolder" class="folder"></span>
+      <span id="deckName"></span>
+      <span id="status" class="status"></span>
+    </div>
   </div>
 
-  <div class="tools doc-only">
-    <button id="undoBtn" class="icon" title="元に戻す（⌘Z）" disabled>
-      <svg viewBox="0 0 20 20" width="17" height="17"><path d="M7.5 5 3.5 9l4 4M4 9h7.5a4.5 4.5 0 0 1 0 9H9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button id="redoBtn" class="icon" title="やり直し（⇧⌘Z）" disabled>
-      <svg viewBox="0 0 20 20" width="17" height="17"><path d="m12.5 5 4 4-4 4M16 9H8.5a4.5 4.5 0 0 0 0 9H11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+  <div class="tools top-center doc-only">
+    <button id="undoBtn" class="icon" data-icon="undo" title="元に戻す（⌘Z）" disabled></button>
+    <button id="redoBtn" class="icon" data-icon="redo" title="やり直し（⇧⌘Z）" disabled></button>
     <span class="vsep"></span>
-    <button id="addSlideBtn" class="tool" data-menu-anchor title="レイアウトを選んでスライドを足す">
-      <svg viewBox="0 0 20 20" width="16" height="16"><rect x="2.5" y="4.5" width="15" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 7.5v5M7.5 10h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      スライド<span class="caret">▾</span>
-    </button>
-    <button id="insertBtn" class="tool" data-menu-anchor title="文字・カード・画像などを足す">
-      <svg viewBox="0 0 20 20" width="16" height="16"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      挿入<span class="caret">▾</span>
-    </button>
+    <button id="textBtn" class="tool has-menu" data-icon="text" title="見出し・本文・箇条書きなどを足す">文字</button>
+    <button id="blockBtn" class="tool has-menu" data-icon="card" title="カード・数字などを足す">カード</button>
+    <button id="imageBtn" class="tool" data-icon="image" title="画像を足す（ドラッグ・⌘V でも置ける）">画像</button>
     <span class="vsep"></span>
-    <button id="viewBtn" class="tool" title="スライド一覧で全体を見る・並べ替える（⌘G）">
-      <svg viewBox="0 0 20 20" width="16" height="16"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="3.5" width="6.5" height="5.5" rx="1"/><rect x="11" y="3.5" width="6.5" height="5.5" rx="1"/><rect x="2.5" y="11" width="6.5" height="5.5" rx="1"/><rect x="11" y="11" width="6.5" height="5.5" rx="1"/></g></svg>
-      一覧
-    </button>
-    <button id="zoomBtn" class="tool zoom" data-menu-anchor title="表示の大きさ"><span id="zoomLabel">100%</span><span class="caret">▾</span></button>
+    <button id="viewBtn" class="tool" data-icon="grid" title="スライド一覧で全体を見る・並べ替える（⌘G）">一覧</button>
+    <button id="zoomBtn" class="tool zoom has-menu" title="表示の大きさ"><span id="zoomLabel">100%</span></button>
   </div>
 
-  <div class="grow"></div>
-
-  <div class="tools doc-only">
-    <button id="checkBtn" class="tool" title="はみ出し・画像切れ・小さい文字などを調べる">
-      チェック<span id="checkBadge" class="badge" hidden></span>
-    </button>
-    <button id="presentBtn" class="tool" title="このスライドから発表（⌘Enter）／最初から（⇧⌘Enter）">
-      <svg viewBox="0 0 20 20" width="14" height="14"><path d="M6 4.5v11l9-5.5z" fill="currentColor"/></svg>
-      発表
-    </button>
-    <button id="exportBtn" class="tool primary" data-menu-anchor>書き出し<span class="caret">▾</span></button>
-    <button id="moreBtn" class="icon" data-menu-anchor title="その他">
-      <svg viewBox="0 0 20 20" width="18" height="18"><g fill="currentColor"><circle cx="4.5" cy="10" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="15.5" cy="10" r="1.5"/></g></svg>
-    </button>
-  </div>
-  <div class="tools home-only">
-    <input id="homeSearch" type="search" placeholder="資料を探す" autocomplete="off">
-    <button id="newDeckBtn" class="tool primary">＋ 新しい資料</button>
+  <div class="top-right">
+    <div class="tools doc-only">
+      <button id="checkBtn" class="tool" title="はみ出し・画像切れ・小さい文字などを調べる">チェック<span id="checkBadge" class="badge" hidden></span></button>
+      <button id="presentBtn" class="tool" data-icon="play" title="このスライドから発表（⌘Enter）／最初から（⇧⌘Enter）">発表</button>
+      <button id="exportBtn" class="tool primary has-menu">書き出し</button>
+      <button id="moreBtn" class="icon" data-icon="more" title="その他"></button>
+    </div>
+    <div class="tools home-only">
+      <input id="homeSearch" type="search" placeholder="資料を探す" autocomplete="off">
+      <button id="newDeckBtn" class="tool primary" data-icon="plus">新しい資料</button>
+    </div>
   </div>
 </header>
 
@@ -70,18 +53,19 @@
 <!-- 編集画面 -->
 <main id="main" hidden>
   <section id="slidesPane" aria-label="スライド">
-    <div class="pane-head"><span id="slideCount"></span></div>
+    <div class="pane-head">
+      <span id="slideCount"></span>
+      <button id="slideAddBtn" class="icon" data-icon="plus" title="スライドを足す（レイアウトを選ぶ）"></button>
+      <button id="slideDupBtn" class="icon" data-icon="copy" title="このスライドを複製（⌘D）"></button>
+      <button id="slideDelBtn" class="icon" data-icon="trash" title="このスライドを削除（⌫）"></button>
+    </div>
     <div id="thumbs" tabindex="0"></div>
   </section>
 
   <section id="center">
-    <div class="crumbs-row">
-      <div id="crumbs" class="crumbs"></div>
-      <button id="notesToggle" class="ghost small" title="発表者ノートを出す・隠す">ノート</button>
-    </div>
     <div id="stage"><div id="frameWrap"><iframe id="frame" title="スライド"></iframe></div></div>
     <div id="notesPane">
-      <textarea id="notes" placeholder="このスライドで話すこと（PDF には出ない。PPTX ではノートになる。発表中は N で見られる）"></textarea>
+      <textarea id="notes" placeholder="ノート（話すこと。発表者表示と PPTX のノートに出る）"></textarea>
     </div>
   </section>
 
