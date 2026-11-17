@@ -21,68 +21,121 @@ const CLIP_TYPE = 'application/x-slide-agent';
 
 // 新しいスライドのレイアウト（PowerPoint の「新しいスライド」にあたる）
 const LAYOUTS = [
-  ['タイトル', `<section class="slide" data-bg="dark" data-align="center">
-  <p class="eyebrow">サブタイトル</p>
+  ['表紙', `<section class="slide" data-bg="dark" data-align="center">
+  <p class="logo">社名</p>
   <h1>資料のタイトル</h1>
-  <p class="muted">提案者・日付</p>
+  <p class="lead muted">サブタイトルを1行で</p>
+  <div class="footer"><span>提案者・日付</span><span></span></div>
+  <aside class="notes"></aside>
+</section>`],
+  ['目次', `<section class="slide">
+  <p class="eyebrow">Agenda</p>
+  <h2>本日の内容</h2>
+  <div class="spacer"></div>
+  <div class="list">
+    <div><span class="no">01</span><h3>1つ目の章</h3><p>この章で話すこと</p></div>
+    <div><span class="no">02</span><h3>2つ目の章</h3><p>この章で話すこと</p></div>
+    <div><span class="no">03</span><h3>3つ目の章</h3><p>この章で話すこと</p></div>
+  </div>
+  <div class="spacer"></div>
+  <aside class="notes"></aside>
+</section>`],
+  ['区切り', `<section class="slide" data-bg="soft" data-align="center">
+  <div class="row">
+    <span class="big-no">01</span>
+    <div>
+      <h2>章の名前</h2>
+      <p class="eyebrow">Chapter Title</p>
+    </div>
+  </div>
   <aside class="notes"></aside>
 </section>`],
   ['見出しと本文', `<section class="slide">
-  <p class="eyebrow">01 ｜ 章の名前</p>
-  <h2>このスライドで言いたいこと</h2>
-  <p class="lead">本文。ダブルクリックで直せる。</p>
-  <aside class="notes"></aside>
-</section>`],
-  ['箇条書き', `<section class="slide">
-  <p class="eyebrow">01 ｜ 章の名前</p>
-  <h2>このスライドで言いたいこと</h2>
-  <ul>
-    <li>1つ目のポイント</li>
-    <li>2つ目のポイント</li>
-    <li>3つ目のポイント</li>
-  </ul>
+  <p class="eyebrow">章の名前</p>
+  <h2>このスライドの見出し</h2>
+  <p class="lead">言いたいことを1行で。<em>一番大事な言葉</em>だけ強調する</p>
+  <p>本文。ダブルクリックで直せる。</p>
   <aside class="notes"></aside>
 </section>`],
   ['カード3つ', `<section class="slide">
-  <p class="eyebrow">01 ｜ 章の名前</p>
-  <h2>このスライドで言いたいこと</h2>
+  <p class="eyebrow">章の名前</p>
+  <h2>このスライドの見出し</h2>
+  <p class="lead">言いたいことを1行で。<em>一番大事な言葉</em>だけ強調する</p>
   <div class="grid cols-3">
-    <div class="card"><h3>1つ目</h3><p>説明を短く。</p></div>
-    <div class="card"><h3>2つ目</h3><p>説明を短く。</p></div>
-    <div class="card"><h3>3つ目</h3><p>説明を短く。</p></div>
+    <div class="card"><span class="no">01</span><h3>1つ目</h3><p>説明を2〜3行で。</p></div>
+    <div class="card"><span class="no">02</span><h3>2つ目</h3><p>説明を2〜3行で。</p></div>
+    <div class="card"><span class="no">03</span><h3>3つ目</h3><p>説明を2〜3行で。</p></div>
   </div>
+  <aside class="notes"></aside>
+</section>`],
+  ['手順', `<section class="slide">
+  <p class="eyebrow">章の名前</p>
+  <h2>進め方</h2>
+  <p class="lead">言いたいことを1行で。<em>一番大事な言葉</em>だけ強調する</p>
+  <div class="steps">
+    <div class="card"><span class="no">01</span><h3>1つ目の手順</h3><p>やること</p></div>
+    <span class="next">›</span>
+    <div class="card"><span class="no">02</span><h3>2つ目の手順</h3><p>やること</p></div>
+    <span class="next">›</span>
+    <div class="card"><span class="no">03</span><h3>3つ目の手順</h3><p>やること</p></div>
+  </div>
+  <aside class="notes"></aside>
+</section>`],
+  ['一覧', `<section class="slide">
+  <p class="eyebrow">章の名前</p>
+  <h2>このスライドの見出し</h2>
+  <div class="spacer"></div>
+  <div class="list">
+    <div><h3>項目の名前</h3><p>1〜2行の説明</p></div>
+    <div><h3>項目の名前</h3><p>1〜2行の説明</p></div>
+    <div><h3>項目の名前</h3><p>1〜2行の説明</p></div>
+  </div>
+  <div class="spacer"></div>
   <aside class="notes"></aside>
 </section>`],
   ['数字で見せる', `<section class="slide">
-  <p class="eyebrow">01 ｜ 章の名前</p>
+  <p class="eyebrow">章の名前</p>
   <h2>数字が示すこと</h2>
+  <p class="lead">言いたいことを1行で。<em>一番大事な言葉</em>だけ強調する</p>
+  <div class="spacer"></div>
   <div class="grid cols-3">
-    <div class="stat"><span class="num">120</span><span class="label">説明</span></div>
-    <div class="stat"><span class="num">45%</span><span class="label">説明</span></div>
-    <div class="stat"><span class="num">3倍</span><span class="label">説明</span></div>
+    <div class="stat"><span class="label">説明</span><span class="num">120<span class="unit">社</span></span></div>
+    <div class="stat"><span class="label">説明</span><span class="num">45<span class="unit">%</span></span></div>
+    <div class="stat"><span class="label">説明</span><span class="num">3<span class="unit">倍</span></span></div>
   </div>
+  <div class="spacer"></div>
+  <aside class="notes"></aside>
+</section>`],
+  ['項目と中身', `<section class="slide">
+  <p class="eyebrow">章の名前</p>
+  <h2>概要</h2>
+  <div class="spacer"></div>
+  <div class="kv">
+    <div><span>項目</span><span>中身</span></div>
+    <div><span>項目</span><span>中身</span></div>
+    <div><span>項目</span><span>中身</span></div>
+    <div><span>項目</span><span>中身</span></div>
+  </div>
+  <div class="spacer"></div>
   <aside class="notes"></aside>
 </section>`],
   ['左右に分ける', `<section class="slide">
+  <p class="eyebrow">章の名前</p>
+  <h2>このスライドの見出し</h2>
   <div class="split">
-    <div>
-      <p class="eyebrow">01 ｜ 章の名前</p>
-      <h2>左に言いたいこと</h2>
-      <p>説明を短く。右の箱は選んで「挿入 → 画像」で写真に替えられる。</p>
-    </div>
-    <div class="card"><h3>右側</h3><p>補足・図・写真など。</p></div>
+    <div class="card"><h3>左側</h3><p>写真にするときは、選んで上の「画像」</p></div>
+    <ul>
+      <li>1つ目のポイント</li>
+      <li>2つ目のポイント</li>
+      <li>3つ目のポイント</li>
+    </ul>
   </div>
-  <aside class="notes"></aside>
-</section>`],
-  ['区切り', `<section class="slide" data-bg="dark" data-align="center">
-  <p class="eyebrow">第2章</p>
-  <h2>章の名前</h2>
   <aside class="notes"></aside>
 </section>`],
   ['まとめ', `<section class="slide" data-align="center">
   <p class="eyebrow">まとめ</p>
-  <h2>一番伝えたいこと</h2>
-  <p class="lead muted">補足を1行で。</p>
+  <h2>一番伝えたいことを1行で</h2>
+  <p class="lead muted">補足を1行で</p>
   <aside class="notes"></aside>
 </section>`],
   ['白紙', `<section class="slide">
@@ -94,21 +147,26 @@ const LAYOUTS = [
 const INSERTS = {
   text: [
     ['見出し', '<h2>見出し</h2>'],
+    ['見出しの下の1行（言いたいこと）', '<p class="lead">言いたいことを1行で。<em>一番大事な言葉</em>だけ強調する</p>'],
     ['小見出し', '<h3>小見出し</h3>'],
     ['本文', '<p>本文</p>'],
     ['箇条書き', '<ul>\n  <li>項目</li>\n  <li>項目</li>\n</ul>'],
     '-',
-    ['見出しの上の文字（章の名前など）', '<p class="eyebrow">01 ｜ 章の名前</p>'],
-    ['縦線つきの文（言いたいこと）', '<p class="bar">伝えたいこと</p>'],
+    ['見出しの上の文字（章の名前など）', '<p class="eyebrow">章の名前</p>'],
+    ['縦線つきの文', '<p class="bar">伝えたいこと</p>'],
     ['タグ', '<span class="tag">タグ</span>'],
+    ['右上の社名', '<p class="logo">社名</p>'],
   ],
   block: [
-    ['カード2つ', '<div class="grid cols-2">\n  <div class="card"><h3>1つ目</h3><p>説明</p></div>\n  <div class="card"><h3>2つ目</h3><p>説明</p></div>\n</div>'],
-    ['カード3つ', '<div class="grid cols-3">\n  <div class="card"><h3>1つ目</h3><p>説明</p></div>\n  <div class="card"><h3>2つ目</h3><p>説明</p></div>\n  <div class="card"><h3>3つ目</h3><p>説明</p></div>\n</div>'],
-    ['数字3つ', '<div class="grid cols-3">\n  <div class="stat"><span class="num">120</span><span class="label">説明</span></div>\n  <div class="stat"><span class="num">45%</span><span class="label">説明</span></div>\n  <div class="stat"><span class="num">3倍</span><span class="label">説明</span></div>\n</div>'],
+    ['カード2つ', '<div class="grid cols-2">\n  <div class="card"><span class="no">01</span><h3>1つ目</h3><p>説明</p></div>\n  <div class="card"><span class="no">02</span><h3>2つ目</h3><p>説明</p></div>\n</div>'],
+    ['カード3つ', '<div class="grid cols-3">\n  <div class="card"><span class="no">01</span><h3>1つ目</h3><p>説明</p></div>\n  <div class="card"><span class="no">02</span><h3>2つ目</h3><p>説明</p></div>\n  <div class="card"><span class="no">03</span><h3>3つ目</h3><p>説明</p></div>\n</div>'],
+    ['手順3つ', '<div class="steps">\n  <div class="card"><span class="no">01</span><h3>1つ目の手順</h3><p>やること</p></div>\n  <span class="next">›</span>\n  <div class="card"><span class="no">02</span><h3>2つ目の手順</h3><p>やること</p></div>\n  <span class="next">›</span>\n  <div class="card"><span class="no">03</span><h3>3つ目の手順</h3><p>やること</p></div>\n</div>'],
+    ['一覧（罫線で区切った行）', '<div class="list">\n  <div><span class="no">01</span><h3>項目の名前</h3><p>説明</p></div>\n  <div><span class="no">02</span><h3>項目の名前</h3><p>説明</p></div>\n</div>'],
+    ['項目と中身の表', '<div class="kv">\n  <div><span>項目</span><span>中身</span></div>\n  <div><span>項目</span><span>中身</span></div>\n</div>'],
+    ['数字3つ', '<div class="grid cols-3">\n  <div class="stat"><span class="label">説明</span><span class="num">120<span class="unit">社</span></span></div>\n  <div class="stat"><span class="label">説明</span><span class="num">45<span class="unit">%</span></span></div>\n  <div class="stat"><span class="label">説明</span><span class="num">3<span class="unit">倍</span></span></div>\n</div>'],
     '-',
-    ['余白（後ろを下に寄せる）', '<div class="spacer"></div>'],
-    ['下の帯（資料名・ページ）', '<div class="footer"><span>資料名</span><span>1</span></div>'],
+    ['余白（前後を離す・真ん中に寄せる）', '<div class="spacer"></div>'],
+    ['下の帯（名前・ページ）', '<div class="footer"><span>名前</span><span>1</span></div>'],
   ],
 };
 
@@ -139,7 +197,7 @@ function icon(name, size = 18) {
 }
 
 const NAMES = { h1: '大見出し', h2: '見出し', h3: '小見出し', p: '本文', li: '項目', ul: '箇条書き', ol: '番号付き', img: '画像', div: '箱', span: '文字', em: '強調', strong: '太字', b: '太字', section: 'スライド', svg: '図', table: '表', small: '小さい文字', br: '改行', a: 'リンク', figure: '図', aside: 'ノート' };
-const CLASS_NAMES = { eyebrow: '見出しの上の文字', card: 'カード', stat: '数字', num: '数字', label: '説明', tag: 'タグ', footer: '下の帯', grid: '並び', split: '左右', bar: '縦線つきの文', lead: 'リード文', photo: '写真', bg: '背景の写真', shade: '写真を暗くする幕', row: '横並び', spacer: '余白' };
+const CLASS_NAMES = { eyebrow: '見出しの上の文字', card: 'カード', stat: '数字', num: '数字', unit: '単位', label: '説明', no: '番号', tag: 'タグ', footer: '下の帯', grid: '並び', split: '左右', steps: '手順', next: '矢印', list: '一覧', kv: '項目と中身', 'big-no': '大きな番号', logo: '社名', bar: '縦線つきの文', lead: '見出しの下の1行', photo: '写真', bg: '背景の写真', shade: '写真を暗くする幕', row: '横並び', spacer: '余白' };
 const VAR_LABELS = { ink: '文字', paper: '地', paper2: '箱の地', accent: 'アクセント', 'accent-soft': 'アクセント（薄）', muted: '薄い文字', 'muted-on-dark': '薄い文字（暗い地）', dark: '暗い地', dark2: '暗い地の箱', line: '線' };
 
 const S = {
@@ -1016,12 +1074,12 @@ function elementPanel(n) {
 
 function slidePanel(slide) {
   const out = [];
-  const dark = slide.getAttribute('data-bg') === 'dark';
+  const bgKind = slide.getAttribute('data-bg') || 'light';
   const center = slide.getAttribute('data-align') === 'center';
   out.push(el('div', { class: 'ins-head slim' }, el('div', { class: 'ins-title' }, el('span', {}, `スライド ${S.cur + 1}`))));
   out.push(sec('背景',
-    field('地', seg([['light', '明るい'], ['dark', '暗い']], dark ? 'dark' : 'light', (v) => {
-      v === 'dark' ? slide.setAttribute('data-bg', 'dark') : slide.removeAttribute('data-bg');
+    field('地', seg([['light', '白'], ['soft', 'グレー'], ['dark', '暗い']], bgKind, (v) => {
+      v === 'light' ? slide.removeAttribute('data-bg') : slide.setAttribute('data-bg', v);
       commit(); renderInspector();
     })),
     colorField('色', slide.style.backgroundColor, (v) => styleChange(slide, 'backgroundColor', v))));
@@ -1040,12 +1098,13 @@ function slidePanel(slide) {
 function openDialog({ title, sub, body = [], foot = [], wide = false, onEnter = null, onClose = null }) {
   const d = $('#dlg');
   d.className = wide ? 'wide' : '';
-  d.replaceChildren(
+  // replaceChildren は null を「null」という文字として入れるので、無いものは外してから渡す
+  d.replaceChildren(...[
     el('div', { class: 'dlg-head' }, title),
     sub ? el('p', { class: 'dlg-sub' }, sub) : null,
     el('div', { class: 'dlg-body' }, ...body),
     foot.length ? el('div', { class: 'dlg-foot' }, ...foot) : null,
-  );
+  ].filter(Boolean));
   d.onkeydown = (e) => {
     if (e.key === 'Enter' && onEnter && e.target.tagName === 'INPUT' && !e.isComposing) { e.preventDefault(); onEnter(); }
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && onEnter) { e.preventDefault(); onEnter(); }

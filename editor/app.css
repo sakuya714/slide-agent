@@ -105,7 +105,7 @@ body:not(.mode-home) .home-only { display: none !important; }
 .menu-item:hover .mi-hint { color: var(--sub); }
 .menu-sep { height: 1px; background: var(--line2); margin: 5px 4px; }
 .menu-head { font-size: 11px; color: var(--faint); padding: 6px 10px 3px; letter-spacing: .06em; }
-.menu.layouts { display: grid; grid-template-columns: repeat(3, 156px); gap: 6px; padding: 10px; }
+.menu.layouts { display: grid; grid-template-columns: repeat(4, 156px); gap: 6px; padding: 10px; }
 .menu.layouts .menu-head { grid-column: 1 / -1; padding: 0 2px 2px; }
 .layout-item { background: none; border: 1px solid transparent; border-radius: 8px; padding: 5px; display: flex; flex-direction: column; gap: 5px; align-items: stretch; color: var(--sub); font-size: 12px; }
 .layout-item:hover { background: var(--panel2) !important; border-color: var(--accent) !important; color: var(--text); }
