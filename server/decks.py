@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent          # slide-agent/
 PRIVATE = Path(os.environ.get("SLIDE_AGENT_PRIVATE", ROOT / "private")).resolve()   # ユーザーのもの全部（Git 管理外）
-DECKS = PRIVATE / "deck"                                 # 資料の本体（サイドバーに出るのはここ）
+DECKS = PRIVATE / "deck"                                 # 資料の本体（ホームに出るのはここ）
 OUTPUT = PRIVATE / "final"                               # 完成品：書き出した PDF・PPTX（中は資料ごと）
 THEME = ROOT / "theme"
 DECK_FILE = "deck.html"
@@ -46,7 +46,7 @@ def rel_of(deck_dir: Path) -> str:
 
 
 def tree() -> list[dict]:
-    """サイドバー用の階層。deck.html を持つフォルダ＝資料、それ以外＝フォルダ。"""
+    """ホーム用の階層。deck.html を持つフォルダ＝資料、それ以外＝フォルダ。"""
     def walk(d: Path) -> list[dict]:
         items = []
         for c in sorted(d.iterdir(), key=lambda x: x.name):

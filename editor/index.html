@@ -3,24 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>slide-agent</title>
+<title>Slide Agent</title>
 <link rel="stylesheet" href="/editor/app.css">
 </head>
 <body class="mode-home">
 
-<!-- 上の帯：左＝資料名と保存状態／中央＝編集の道具／右＝確かめる・見せる・書き出す。アイコンは app.js の ICONS から入る -->
-<header id="top">
+<!-- 上の帯（編集画面だけ）：左＝資料名と保存状態／中央＝編集の道具／右＝確かめる・見せる・書き出す。アイコンは app.js の ICONS から入る -->
+<header id="top" class="doc-only">
   <div class="top-left">
-    <span class="brand home-only">slide-agent</span>
-    <button id="homeBtn" class="icon doc-only" data-icon="back" title="資料の一覧に戻る（⌘O）"></button>
-    <div class="doc-title doc-only">
+    <button id="homeBtn" class="icon" data-icon="back" title="資料の一覧に戻る（⌘O）"></button>
+    <div class="doc-title">
       <span id="deckFolder" class="folder"></span>
       <span id="deckName"></span>
       <span id="status" class="status"></span>
     </div>
   </div>
 
-  <div class="tools top-center doc-only">
+  <div class="tools top-center">
     <button id="undoBtn" class="icon" data-icon="undo" title="元に戻す（⌘Z）" disabled></button>
     <button id="redoBtn" class="icon" data-icon="redo" title="やり直し（⇧⌘Z）" disabled></button>
     <span class="vsep"></span>
@@ -33,21 +32,27 @@
   </div>
 
   <div class="top-right">
-    <div class="tools doc-only">
+    <div class="tools">
       <button id="checkBtn" class="tool" title="はみ出し・画像切れ・小さい文字などを調べる">チェック<span id="checkBadge" class="badge" hidden></span></button>
       <button id="presentBtn" class="tool" data-icon="play" title="このスライドから発表（⌘Enter）／最初から（⇧⌘Enter）">発表</button>
       <button id="exportBtn" class="tool primary has-menu">書き出し</button>
     </div>
-    <div class="tools home-only">
-      <input id="homeSearch" type="search" placeholder="資料を探す" autocomplete="off">
-      <button id="newDeckBtn" class="tool primary" data-icon="plus">新しい資料</button>
-    </div>
   </div>
 </header>
 
-<!-- ホーム：資料の一覧 -->
+<!-- ホーム：左＝フォルダ（階層）／右＝選んだフォルダの資料（更新順） -->
 <main id="home">
-  <div id="homeBody"></div>
+  <header class="home-head">
+    <h1 class="wordmark"><span class="mark"></span>Slide <span>Agent</span></h1>
+    <div class="home-tools">
+      <label class="search"><span data-icon="search"></span><input id="homeSearch" type="search" placeholder="資料を探す" autocomplete="off"></label>
+      <button id="newDeckBtn" class="primary" data-icon="plus">新しい資料</button>
+    </div>
+  </header>
+  <div class="home-cols">
+    <nav id="homeNav" aria-label="フォルダ"></nav>
+    <section id="homeBody"></section>
+  </div>
 </main>
 
 <!-- 編集画面 -->

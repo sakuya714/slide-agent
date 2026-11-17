@@ -9,8 +9,8 @@ const EDIT_CSS = `
 html, body { margin:0 !important; padding:0 !important; gap:0 !important; background:transparent !important; display:block !important; overflow:hidden !important; }
 .slide { box-shadow:none !important; }
 .slide:not([data-kit-cur]) { display:none !important; }
-[data-kit-hover]:not([data-kit-sel]):not([contenteditable]) { outline:1px dashed rgba(77,141,255,.75) !important; outline-offset:2px; }
-[data-kit-sel] { outline:2px solid #4d8dff !important; outline-offset:2px; }
+[data-kit-hover]:not([data-kit-sel]):not([contenteditable]) { outline:1px dashed rgba(123,155,255,.75) !important; outline-offset:2px; }
+[data-kit-sel] { outline:2px solid #5b84ff !important; outline-offset:2px; }
 section.slide[data-kit-sel] { outline-offset:-2px; }
 [contenteditable] { outline:2px solid #e2a43b !important; outline-offset:2px; cursor:text !important; }
 a { pointer-events:none; }
@@ -127,6 +127,9 @@ const ICONS = {
   grid: '<rect x="3" y="3.5" width="6" height="5.5" rx="1"/><rect x="11" y="3.5" width="6" height="5.5" rx="1"/><rect x="3" y="11" width="6" height="5.5" rx="1"/><rect x="11" y="11" width="6" height="5.5" rx="1"/>',
   play: '<path d="M6.5 4.5v11l8.5-5.5z" fill="currentColor"/>',
   back: '<path d="M12.5 4.5 7 10l5.5 5.5"/>',
+  search: '<circle cx="9" cy="9" r="5"/><path d="m13 13 3.5 3.5"/>',
+  folder: '<path d="M3 6.2A1.7 1.7 0 0 1 4.7 4.5h3.1l1.7 1.8h5.8A1.7 1.7 0 0 1 17 8v6.3a1.7 1.7 0 0 1-1.7 1.7H4.7A1.7 1.7 0 0 1 3 14.3z"/>',
+  stack: '<rect x="3" y="5.5" width="14" height="10" rx="1.6"/><path d="M5.5 3.2h9"/>',
   caret: '<path d="m6.5 8.5 3.5 3.5 3.5-3.5"/>',
 };
 function icon(name, size = 18) {
@@ -310,7 +313,8 @@ function showConflict() {
 function hideBanner() { $('#banner').hidden = true; }
 
 // ---------- ホーム（資料の一覧） ----------
-let HOME = [];
+let HOME = [];          // 資料の一覧（平ら）
+let FOLDERS = [];       // フォルダの階層
 async function showHome() {
   if (S.editing) endEdit();
   if (S.dirty) await save();
@@ -320,47 +324,69 @@ async function showHome() {
   document.body.classList.add('mode-home');
   document.body.classList.remove('view-grid');
   $('#main').hidden = true; $('#home').hidden = false;
-  document.title = 'slide-agent';
+  document.title = 'Slide Agent';
   history.replaceState(null, '', location.pathname);
   hideBanner();
-  try { HOME = flatten(await api('GET', '/api/tree')); } catch (e) { $('#homeBody').textContent = '一覧を読めない：' + e.message; return; }
+  try {
+    const tree = await api('GET', '/api/tree');
+    HOME = flatten(tree);
+    FOLDERS = tree;
+  } catch (e) { $('#homeBody').textContent = '一覧を読めない：' + e.message; return; }
   renderHome();
-  $('#homeSearch').focus();
 }
 function flatten(items, out = []) {
   for (const it of items) {
-    if (it.type === 'deck') out.push({ ...it, folder: it.path.split('/').slice(0, -1).join(' / ') });
-    else { out.push({ type: 'folder', path: it.path }); flatten(it.children, out); }
+    if (it.type === 'deck') out.push({ ...it, folder: it.path.split('/').slice(0, -1).join('/') });
+    else flatten(it.children, out);
   }
   return out;
 }
+const countIn = (folder) => HOME.filter((d) => !folder || d.folder === folder || d.folder.startsWith(folder + '/')).length;
+// 選んでいるフォルダ（'' は「すべて」）。次に開いたときも同じフォルダから
+const homeFolder = () => {
+  const f = store.get('kit.folder', '');
+  return f && countIn(f) ? f : '';
+};
 function renderHome() {
+  renderHomeNav();
   const q = $('#homeSearch').value.trim().toLowerCase();
-  const decks = HOME.filter((d) => d.type === 'deck' && (!q || d.path.toLowerCase().includes(q)));
+  const f = homeFolder();
   const body = $('#homeBody');
-  if (!HOME.some((d) => d.type === 'deck')) {
+  if (!HOME.length) {
     body.replaceChildren(el('div', { class: 'home-empty' },
-      el('p', {}, 'まだ資料が無い。Claude Code に「〇〇の資料作って」と頼むか、ここで作る。'),
-      el('button', { class: 'primary', onclick: newDeckDialog }, '＋ 新しい資料')));
+      el('p', {}, 'まだ資料が無い。Claude Code に「〇〇の資料作って」と頼むか、右上の「新しい資料」から作る。')));
     return;
   }
-  const secs = [];
-  if (!q && decks.length > 6) {
-    const recent = [...decks].sort((a, b) => b.mtime - a.mtime).slice(0, 4);
-    secs.push(['最近', recent]);
-  }
-  const byFolder = new Map();
-  for (const d of decks) {
-    const k = d.folder || '（フォルダなし）';
-    if (!byFolder.has(k)) byFolder.set(k, []);
-    byFolder.get(k).push(d);
-  }
-  for (const [k, v] of byFolder) secs.push([k, v.sort((a, b) => b.mtime - a.mtime)]);
-  body.replaceChildren(...secs.map(([title, list]) => el('section', { class: 'home-sec' },
-    el('h3', {}, title), el('div', { class: 'home-grid' }, list.map(deckCard)))));
-  if (!decks.length) body.append(el('p', { class: 'home-empty' }, '見つからない'));
+  // 検索は全部のフォルダから。そうでなければ選んだフォルダ（中のフォルダも含む）
+  const list = HOME.filter((d) => (q ? d.path.toLowerCase().includes(q) : !f || d.folder === f || d.folder.startsWith(f + '/')))
+    .sort((a, b) => b.mtime - a.mtime);
+  const title = q ? [el('span', {}, `「${$('#homeSearch').value.trim()}」の検索結果`)]
+    : f ? f.split('/').flatMap((p, i, arr) => [i ? el('span', { class: 'sep' }, '›') : null,
+      el('button', { class: 'crumb', onclick: () => { store.set('kit.folder', arr.slice(0, i + 1).join('/')); renderHome(); } }, p)])
+      : [el('span', {}, 'すべての資料')];
+  body.replaceChildren(
+    el('div', { class: 'home-title' }, el('h2', {}, ...title), el('span', { class: 'count' }, `${list.length} 件`)),
+    list.length ? el('div', { class: 'home-grid' }, list.map((d) => deckCard(d, q || d.folder !== f ? d.folder : ''))) : el('p', { class: 'home-none' }, '見つからない'));
 }
-function deckCard(d) {
+function renderHomeNav() {
+  const f = homeFolder();
+  const q = $('#homeSearch').value.trim();
+  const row = (label, path, depth, n) => el('button', {
+    class: 'nav-row' + (!q && path === f ? ' on' : ''), style: `--depth:${depth}`, title: path || 'すべての資料',
+    onclick: () => { store.set('kit.folder', path); $('#homeSearch').value = ''; renderHome(); },
+  }, el('span', { class: 'nav-ic' }, icon(path ? 'folder' : 'stack', 16)), el('span', { class: 'nav-name' }, label), el('span', { class: 'nav-n' }, String(n)));
+  const rows = [row('すべての資料', '', 0, HOME.length)];
+  const walk = (items, depth) => {
+    for (const it of items) {
+      if (it.type !== 'folder') continue;
+      rows.push(row(it.name, it.path, depth, countIn(it.path)));
+      walk(it.children, depth + 1);
+    }
+  };
+  walk(FOLDERS, 0);
+  $('#homeNav').replaceChildren(el('div', { class: 'nav-head' }, 'フォルダ'), ...rows);
+}
+function deckCard(d, where = '') {
   const f = el('iframe', { loading: 'lazy', tabindex: '-1', 'aria-hidden': 'true', src: `/deck/${enc(d.path)}/deck.html` });
   f.addEventListener('load', () => {
     try {
@@ -374,11 +400,13 @@ function deckCard(d) {
   const box = el('div', { class: 'dthumb' }, f);
   new ResizeObserver(() => { f.style.transform = `scale(${box.clientWidth / 1280})`; }).observe(box);
   return el('button', { class: 'deck-card', title: d.path, onclick: () => openDeck(d.path) },
-    box, el('div', { class: 'dname' }, d.name), el('div', { class: 'dmeta' }, ago(d.mtime)));
+    box, el('div', { class: 'dname' }, d.name), el('div', { class: 'dmeta' }, [where.split('/').join(' › '), ago(d.mtime)].filter(Boolean).join('　')));
 }
 function newDeckDialog() {
-  const folders = [...new Set(HOME.filter((d) => d.type === 'folder').map((d) => d.path))];
-  const folder = el('input', { list: 'folderList', placeholder: '例：営業', autocomplete: 'off' });
+  const folders = [];
+  const walk = (items) => items.forEach((it) => { if (it.type === 'folder') { folders.push(it.path); walk(it.children); } });
+  walk(FOLDERS);
+  const folder = el('input', { list: 'folderList', placeholder: '例：営業　（/ で区切ると深くできる）', autocomplete: 'off', value: homeFolder() });
   const name = el('input', { placeholder: '例：〇〇社_提案', autocomplete: 'off' });
   const err = el('span', { class: 'dlg-err' });
   const go = async () => {
@@ -393,7 +421,6 @@ function newDeckDialog() {
   };
   openDialog({
     title: '新しい資料',
-    sub: 'private/deck/{フォルダ}/{資料名}/deck.html ができる。フォルダは / で区切ると深くできる。',
     body: [el('div', { class: 'form' }, el('label', {}, 'フォルダ'), folder, el('label', {}, '資料名'), name),
       el('datalist', { id: 'folderList' }, folders.map((f) => el('option', { value: f })))],
     foot: [err, el('button', { onclick: closeDialog }, 'やめる'), el('button', { class: 'primary', onclick: go }, '作る')],
@@ -415,7 +442,7 @@ async function openDeck(path, { keepPlace = false } = {}) {
   $('#deckName').textContent = parts.pop();
   $('#deckFolder').textContent = parts.join(' / ');
   $('#deckName').title = path;
-  document.title = `${$('#deckName').textContent} — slide-agent`;
+  document.title = `${$('#deckName').textContent} — Slide Agent`;
   setStatus('saved', '保存済み');
   document.body.classList.remove('mode-home');
   $('#main').hidden = false; $('#home').hidden = true;
