@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent          # slide-agent/
 PRIVATE = Path(os.environ.get("SLIDE_AGENT_PRIVATE", ROOT / "private")).resolve()   # ユーザーのもの全部（Git 管理外）
-DECKS = PRIVATE / "deck"                                 # 資料の本体（サイドバーに出るのはここ）
+DECKS = PRIVATE / "deck"                                 # 資料の本体（ホームに出るのはここ）
 OUTPUT = PRIVATE / "final"                               # 完成品：書き出した PDF・PPTX（中は資料ごと）
 THEME = ROOT / "theme"
 DECK_FILE = "deck.html"
@@ -46,7 +46,7 @@ def rel_of(deck_dir: Path) -> str:
 
 
 def tree() -> list[dict]:
-    """サイドバー用の階層。deck.html を持つフォルダ＝資料、それ以外＝フォルダ。"""
+    """ホーム用の階層。deck.html を持つフォルダ＝資料、それ以外＝フォルダ。"""
     def walk(d: Path) -> list[dict]:
         items = []
         for c in sorted(d.iterdir(), key=lambda x: x.name):
@@ -113,6 +113,32 @@ def new(rel: str) -> str:
                .replace("{{TITLE}}", parts[-1]))
     (d / DECK_FILE).write_text(html, encoding="utf-8")
     return "/".join(parts)
+
+
+IMAGE_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"}
+MAX_ASSET = 30 * 1024 * 1024
+BAD_NAME = re.compile(r"[^\w\-.]+")
+
+
+def save_asset(rel: str, name: str, data: bytes) -> str:
+    """画像を {資料}/assets/ に保存。同じ名前があれば -2, -3 … を付ける。返り値は deck.html に書く src。"""
+    d = safe(rel)
+    if not (d / DECK_FILE).exists():
+        raise DeckError("資料が無い")
+    if not data or len(data) > MAX_ASSET:
+        raise DeckError("画像が空か、大きすぎる（30MB まで）")
+    stem, ext = os.path.splitext(Path(name or "image.png").name)
+    ext = ext.lower()
+    if ext not in IMAGE_EXT:
+        raise DeckError("画像は PNG・JPEG・GIF・WebP・SVG だけ")
+    stem = BAD_NAME.sub("_", stem).strip("._") or "image"
+    assets = d / "assets"
+    assets.mkdir(exist_ok=True)
+    out, i = assets / f"{stem}{ext}", 2
+    while out.exists():
+        out, i = assets / f"{stem}-{i}{ext}", i + 1
+    out.write_bytes(data)
+    return f"assets/{out.name}"
 
 
 def output_path(deck_dir: Path, ext: str) -> Path:

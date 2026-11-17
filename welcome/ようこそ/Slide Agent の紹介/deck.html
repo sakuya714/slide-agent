@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Slide Agent の使い方</title>
+<style data-kit="theme">
+/* slide-agent default テーマ
+   - 色・フォントは deck.html の <style data-kit="vars"> の変数で決まる。ここに色の値を直書きしない
+   - 1スライド = <section class="slide">（1280×720 固定）
+   - 見た目の方針：白地に紺の文字、薄いグレーの箱と細い罫線、強調だけくすんだ金。影・角丸は使わない。グラデーションは表紙（暗い地）の背景だけ */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+  margin: 0; padding: 40px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 32px;
+  background: #d8d9dc;
+  font-family: var(--font-body);
+}
+
+/* ---- スライド ---- */
+.slide {
+  position: relative; flex: none;
+  width: 1280px; height: 720px; overflow: hidden;
+  padding: 64px 88px 80px;
+  display: flex; flex-direction: column; gap: 22px;
+  background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-size: 20px; line-height: 1.7;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+}
+/* 暗い地（表紙）：濃い紺に、右上の青緑と下のグレーの光をぼかして重ねる。PPTX では背景だけ画像になり、文字は直せる */
+.slide[data-bg="dark"] {
+  color: var(--paper);
+  background:
+    radial-gradient(ellipse 55% 65% at 82% 12%, color-mix(in srgb, var(--glow) 60%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 72% 108%, color-mix(in srgb, var(--muted) 45%, transparent), transparent 70%),
+    radial-gradient(ellipse 45% 55% at 0% 100%, color-mix(in srgb, var(--dark2) 90%, transparent), transparent 70%),
+    var(--dark);
+}
+.slide[data-bg="soft"] { background: var(--paper2); }
+.slide[data-align="center"] { justify-content: center; }
+.slide > :not(.bg):not(.shade):not(.logo):not(.footer) { position: relative; z-index: 1; }
+.notes { display: none !important; }
+
+/* ---- 文字 ---- */
+.slide h1, .slide h2, .slide h3, .slide p, .slide ul, .slide ol { margin: 0; }
+.slide h1 { font-family: var(--font-serif); font-size: 64px; line-height: 1.3; font-weight: 700; letter-spacing: .04em; }
+.slide h2 { font-family: var(--font-serif); font-size: 36px; line-height: 1.4; font-weight: 700; }
+.slide h3 { font-family: var(--font-serif); font-size: 24px; line-height: 1.5; font-weight: 700; }
+.slide p  { font-size: 20px; line-height: 1.7; }
+.slide em { font-style: normal; font-weight: 700; color: var(--accent); }
+.slide strong { font-weight: 700; }
+.slide .lead  { font-size: 26px; line-height: 1.6; }
+.slide .muted { color: var(--muted); }
+.slide[data-bg="dark"] .muted { color: var(--muted-on-dark); }
+.slide .small { font-size: 15px; line-height: 1.6; }
+
+/* 見出しの上の小さい文字（章の名前など）。すぐ下の見出しに寄せる */
+.slide .eyebrow {
+  font-size: 14px; line-height: 1.5; font-weight: 400; letter-spacing: .2em;
+  color: var(--muted);
+}
+.slide .eyebrow + h1, .slide .eyebrow + h2 { margin-top: -16px; }
+.slide[data-bg="dark"] .eyebrow { color: var(--muted-on-dark); }
+/* 見出しのすぐ下の1行（このスライドで言いたいこと） */
+.slide h2 + .lead { margin-top: -8px; }
+.slide h2 + .lead + :not(.spacer):not(.notes) { margin-top: 18px; }
+
+.slide .tag {
+  display: inline-block; align-self: flex-start;
+  padding: 3px 14px; border-radius: 999px;
+  background: var(--paper2); color: var(--ink);
+  font-size: 15px; line-height: 1.6;
+}
+
+/* 右上の社名・ロゴ（文字でも画像でも） */
+.slide .logo {
+  position: absolute; top: 44px; right: 88px; z-index: 1;
+  font-family: var(--font-serif); font-size: 22px; line-height: 1.2; font-weight: 700;
+}
+.slide img.logo { height: 28px; width: auto; }
+
+/* 箇条書き：小さいグレーの四角 */
+.slide ul, .slide ol { padding-left: 1.2em; }
+.slide ul { list-style: square; }
+.slide li { font-size: 20px; line-height: 1.7; }
+.slide li + li { margin-top: 8px; }
+.slide li::marker { color: var(--muted); }
+
+/* ---- 並べる ---- */
+.row   { display: flex; gap: 24px; align-items: center; }
+.grid  { display: grid; gap: 28px; }
+.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; flex: 1; }
+.spacer { flex: 1; }
+
+/* ---- 箱 ---- */
+.card {
+  background: var(--paper2); padding: 30px 30px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.card h3 { font-size: 24px; }
+.card p  { font-size: 17px; line-height: 1.8; color: var(--ink); }
+.slide[data-bg="dark"] .card { background: var(--dark2); }
+.slide[data-bg="dark"] .card p { color: var(--paper); }
+
+/* 番号（01・02…）。カードや一覧の頭に置く */
+.slide .no { font-family: var(--font-serif); font-size: 38px; line-height: 1.1; font-weight: 400; color: var(--muted); }
+
+/* 手順：カードを › でつなぐ。<div class="steps"><div class="card">…</div><span class="next">›</span><div class="card">…</div></div> */
+.steps { display: flex; align-items: stretch; gap: 14px; }
+.steps > .card { flex: 1; }
+.steps > .next { align-self: center; flex: none; width: 18px; text-align: center; font-size: 30px; line-height: 1; color: var(--accent); }
+
+/* 一覧：細い罫線で区切った行。<div class="list"><div><span class="no">01</span><h3>名前</h3><p>説明</p></div>…</div> */
+.list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.list > div {
+  display: grid; grid-template-columns: 96px 1fr 1.5fr; gap: 24px; align-items: center;
+  padding: 20px 0; border-bottom: 1px solid var(--line);
+}
+.list > div > :not(.no):first-child { grid-column: 1 / 3; }
+.list p { font-size: 18px; color: var(--ink); }
+
+/* 項目と中身の表（会社概要など）。<div class="kv"><div><span>会社名</span><span>中身</span></div>…</div> */
+.kv { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.kv > div {
+  display: grid; grid-template-columns: 160px 1fr; gap: 24px; align-items: baseline;
+  padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 19px; line-height: 1.6;
+}
+.kv > div > :first-child { font-size: 15px; letter-spacing: .1em; color: var(--muted); }
+
+.bar { border-left: 4px solid var(--accent); padding: 2px 0 2px 20px; }
+
+/* 大きい数字。単位は <span class="unit"> で小さく */
+.stat { display: flex; flex-direction: column; gap: 4px; }
+.stat .num   { font-family: var(--font-serif); font-size: 80px; line-height: 1.05; font-weight: 400; color: var(--ink); }
+.stat .unit  { font-size: 26px; margin-left: 6px; }
+.stat .label { font-size: 15px; line-height: 1.5; letter-spacing: .1em; color: var(--muted); }
+.slide[data-bg="dark"] .stat .num { color: var(--paper); }
+
+/* 区切りスライドの大きな番号。<section class="slide" data-bg="soft" data-align="center"><div class="row"><span class="big-no">01</span><div>…</div></div> */
+.big-no { font-family: var(--font-serif); font-size: 190px; line-height: 1; font-weight: 400; color: var(--accent-soft); flex: none; width: 240px; }
+
+/* ---- 画像 ---- */
+.slide img { display: block; max-width: 100%; }
+.photo { width: 100%; height: 100%; object-fit: cover; }
+.bg    { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.shade { position: absolute; inset: 0; z-index: 0; background: var(--dark); opacity: .6; }
+
+/* ---- 下の帯（左に名前・右にページ番号）。中身の流れに入らず、いつも一番下 ---- */
+.slide .footer {
+  position: absolute; left: 88px; right: 88px; bottom: 32px; z-index: 1;
+  display: flex; justify-content: space-between;
+  font-size: 14px; line-height: 1.5; color: var(--muted); letter-spacing: .04em;
+}
+.slide[data-bg="dark"] .footer { color: var(--muted-on-dark); }
+
+/* ---- 印刷（PDF） ---- */
+@page { size: 1280px 720px; margin: 0; }
+@media print {
+  body { padding: 0; gap: 0; background: none; display: block; }
+  .slide { box-shadow: none; break-after: page; }
+}
+</style>
+<style data-kit="vars">
+:root {
+  /* 色（テーマ色。編集画面の「資料全体の色」で変えられる）
+     白地・紺の文字・薄いグレーの箱・くすんだ金の強調。色は3つまで（紺・グレー・金） */
+  --ink: #1b2a4a;           /* 文字・見出し（紺） */
+  --paper: #ffffff;         /* 地 */
+  --paper2: #f3f5f8;        /* 箱の地・区切りスライドの地（薄いグレー） */
+  --accent: #96772a;        /* 強調（くすんだ金）。1スライドに1か所まで */
+  --accent-soft: #ddcf9f;   /* 区切りの大きな番号（薄い金） */
+  --muted: #7d8597;         /* 小さいラベル・番号・補足（グレー） */
+  --muted-on-dark: #a7b0c4;
+  --dark: #17223d;          /* 表紙・暗い地（濃い紺） */
+  --dark2: #24314f;
+  --glow: #2d7f96;          /* 表紙のグラデーションの光（青緑） */
+  --line: #dfe3ea;          /* 罫線 */
+  /* フォント（画面・PDF）。本文も明朝にして落ち着いた印象に。ゴシックにしたいときは --font-body を --font-sans に */
+  --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  --font-serif: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-body: var(--font-serif);
+  /* フォント（PPTX。相手の PC にもあるもの） */
+  --pptx-font-sans: "Yu Gothic";
+  --pptx-font-serif: "Yu Mincho";
+}
+</style>
+</head>
+<body>
+
+<section class="slide" data-bg="dark" data-align="center">
+  <p class="logo">Slide Agent</p>
+  <p class="eyebrow">ようこそ</p>
+  <h1>AI が作って、<br>人が仕上げる資料づくり</h1>
+  <p class="lead muted">Slide Agent の紹介と使い方</p>
+  <div class="footer"><span>最初から入っている見本の資料です。自由に直して試してください</span><span></span></div>
+  <aside class="notes">最初から入っている見本の資料。ここで操作を試してから、自分の資料を作り始める。</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Agenda</p>
+  <h2>この資料の内容</h2>
+  <div class="spacer"></div>
+  <div class="list">
+    <div><span class="no">01</span><h3>Slide Agent とは</h3><p>できること・資料ができるまで</p></div>
+    <div><span class="no">02</span><h3>使い方</h3><p>AI への頼み方・画面の見方・よく使う操作</p></div>
+    <div><span class="no">03</span><h3>書き出しと置き場所</h3><p>PDF と PPTX の違い・資料の置き場所</p></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>2 / 14</span></div>
+  <aside class="notes">3つの章で、何ができるか・どう使うか・どこに何があるかを順に説明する。</aside>
+</section>
+
+<section class="slide" data-bg="soft" data-align="center">
+  <div class="row">
+    <span class="big-no">01</span>
+    <div>
+      <h2>Slide Agent とは</h2>
+      <p class="eyebrow">About</p>
+    </div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>3 / 14</span></div>
+  <aside class="notes"></aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Slide Agent とは｜できること</p>
+  <h2>3つのことができる</h2>
+  <p class="lead">資料の正本は <em>deck.html の1ファイル</em>。AI も人も同じファイルを直す</p>
+  <div class="grid cols-3">
+    <div class="card"><span class="no">01</span><h3>AI が作る</h3><p>Claude Code に頼むと、決まった型とデザインで資料を作る。</p></div>
+    <div class="card"><span class="no">02</span><h3>画面で直す</h3><p>ブラウザで文字・色・並びを直す。保存は自動。</p></div>
+    <div class="card"><span class="no">03</span><h3>書き出す</h3><p>PDF と、PowerPoint で直せる PPTX にする。</p></div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>4 / 14</span></div>
+  <aside class="notes">AI が書いた資料を人が直し、また AI が直す。PDF・PPTX は毎回 deck.html から作り直すので、正本がずれない。</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Slide Agent とは｜資料ができるまで</p>
+  <h2>資料ができるまで</h2>
+  <p class="lead">AI と人が<em>交互に直して</em>仕上げる</p>
+  <div class="steps">
+    <div class="card"><span class="no">01</span><h3>頼む</h3><p>Claude Code に「〇〇の資料作って」</p></div>
+    <span class="next">›</span>
+    <div class="card"><span class="no">02</span><h3>直す</h3><p>画面で文字や色を直す。AI にも直させる</p></div>
+    <span class="next">›</span>
+    <div class="card"><span class="no">03</span><h3>確かめる</h3><p>「チェック」ではみ出しなどを調べる</p></div>
+    <span class="next">›</span>
+    <div class="card"><span class="no">04</span><h3>書き出す</h3><p>PDF・PPTX にする</p></div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>5 / 14</span></div>
+  <aside class="notes">AI がファイルを直すと、開いている画面に2秒以内に反映される。</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">Slide Agent とは｜安心して使える</p>
+  <h2>自分の Mac の中だけで動く</h2>
+  <p class="lead">資料は<em>自分の Mac の中</em>に置かれ、GitHub にも上がらない</p>
+  <div class="spacer"></div>
+  <div class="grid cols-3">
+    <div class="stat"><span class="label">資料を外に送る回数</span><span class="num">0<span class="unit">回</span></span></div>
+    <div class="stat"><span class="label">最初から使えるレイアウト</span><span class="num">12<span class="unit">種</span></span></div>
+    <div class="stat"><span class="label">書き出せる形</span><span class="num">2<span class="unit">形式</span></span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>6 / 14</span></div>
+  <aside class="notes">サーバーは 127.0.0.1 だけで動き、外からはつながらない。private/ フォルダは Git に入らない仕組みが2重にある。</aside>
+</section>
+
+<section class="slide" data-bg="soft" data-align="center">
+  <div class="row">
+    <span class="big-no">02</span>
+    <div>
+      <h2>使い方</h2>
+      <p class="eyebrow">How to Use</p>
+    </div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>7 / 14</span></div>
+  <aside class="notes"></aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">使い方｜AI に頼む</p>
+  <h2>AI への頼み方</h2>
+  <p class="lead">Claude Code をこのフォルダで開いて、<em>ふだんの言葉で</em>頼む</p>
+  <div class="list">
+    <div><h3>「〇〇社向けの提案資料を10枚で作って」</h3><p>新しい資料を作り、チェックを通して画面で開く</p></div>
+    <div><h3>「3枚目をもっと短くして」</h3><p>開いている資料を直す</p></div>
+    <div><h3>「次から表紙に社名を入れて」</h3><p>private/rules/ に決まりとして残し、次の資料から守る</p></div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>8 / 14</span></div>
+  <aside class="notes">AI は CLAUDE.md に書かれた型（構成・デザイン・部品）で資料を作る。自分好みの決まりは private/rules/ に育てていく。</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">使い方｜画面の見方</p>
+  <h2>編集画面の見方</h2>
+  <div class="spacer"></div>
+  <div class="kv">
+    <div><span>左の列</span><span>スライドの一覧。上の ＋・複製・削除で足す・消す。ドラッグで並べ替え</span></div>
+    <div><span>上の帯</span><span>文字・カード・画像を足す。発表・チェック・書き出し</span></div>
+    <div><span>真ん中</span><span>クリックで選ぶ。ダブルクリックで文字を直す。右クリックでメニュー</span></div>
+    <div><span>右のパネル</span><span>選んだものの色・大きさ・揃え。何も選ばなければスライドの設定</span></div>
+    <div><span>下の欄</span><span>発表者ノート。発表者表示と PPTX のノートに出る</span></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>9 / 14</span></div>
+  <aside class="notes">左上の「‹」で資料の一覧に戻る。</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">使い方｜よく使う操作</p>
+  <h2>覚えておくと速い操作</h2>
+  <p class="lead">迷ったら <em>⌘/</em> でショートカットの一覧を出す</p>
+  <div class="grid cols-3">
+    <div class="card"><h3>⌘Z</h3><p>元に戻す。色や大きさを戻すときも</p></div>
+    <div class="card"><h3>⌘D</h3><p>選んだ部品・スライドを複製</p></div>
+    <div class="card"><h3>⌥↑ ⌥↓</h3><p>部品・スライドを前後に動かす</p></div>
+    <div class="card"><h3>⌘G</h3><p>スライドを一覧で見る</p></div>
+    <div class="card"><h3>⌘Enter</h3><p>このスライドから発表</p></div>
+    <div class="card"><h3>Esc</h3><p>直し終わる・ひとつ外側を選ぶ</p></div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>10 / 14</span></div>
+  <aside class="notes">発表中は N で発表者表示（ノート・次のスライド・経過時間）、B で黒い画面。</aside>
+</section>
+
+<section class="slide" data-bg="soft" data-align="center">
+  <div class="row">
+    <span class="big-no">03</span>
+    <div>
+      <h2>書き出しと置き場所</h2>
+      <p class="eyebrow">Export</p>
+    </div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>11 / 14</span></div>
+  <aside class="notes"></aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">書き出しと置き場所｜PDF と PPTX</p>
+  <h2>PDF と PPTX の使い分け</h2>
+  <p class="lead">見せるだけなら PDF、<em>相手が直すなら PPTX</em></p>
+  <div class="grid cols-2">
+    <div class="card"><span class="no">PDF</span><h3>画面とまったく同じ見た目</h3><p>フォントも埋め込まれる。メールで送る・印刷するときに。</p></div>
+    <div class="card"><span class="no">PPTX</span><h3>PowerPoint で直せる</h3><p>文字・箱が PowerPoint の部品になる。表紙の背景や図は画像になる。</p></div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>12 / 14</span></div>
+  <aside class="notes">上の「書き出し」から選ぶ。終わったら「開く」「Finder で表示」が出る。</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">書き出しと置き場所｜フォルダ</p>
+  <h2>資料の置き場所</h2>
+  <p class="lead"><em>private/</em> の中は自分だけのもの。GitHub には上がらない</p>
+  <div class="kv">
+    <div><span>private/deck/</span><span>作業中の資料。フォルダに分けると、一覧の左に階層で出る</span></div>
+    <div><span>private/final/</span><span>書き出した PDF・PPTX（deck/ と同じ並び）</span></div>
+    <div><span>private/rules/</span><span>AI への決まり。直下は全部の資料、フォルダの中はその資料用</span></div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>13 / 14</span></div>
+  <aside class="notes">この資料は private/deck/ようこそ/ に入っている。いらなくなったら消してよい。</aside>
+</section>
+
+<section class="slide" data-align="center">
+  <p class="eyebrow">まとめ</p>
+  <h2>まずは「〇〇の資料作って」と頼んでみる</h2>
+  <p class="lead muted">この資料も自由に直して、操作を試してください</p>
+  <div class="footer"><span>Slide Agent</span><span>14 / 14</span></div>
+  <aside class="notes">わからないことは Claude Code に聞けば、README と CLAUDE.md を読んで答える。</aside>
+</section>
+
+</body>
+</html>

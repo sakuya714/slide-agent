@@ -1,18 +1,21 @@
 :root {
-  /* 色（テーマ色。編集画面の「テーマ色」で変えられる） */
-  --ink: #1d2430;
-  --paper: #f7f5f0;
-  --paper2: #ece8df;
-  --accent: #b8553a;
-  --accent-soft: #f3e1d8;
-  --muted: #6b7280;
-  --muted-on-dark: #a9b1bc;
-  --dark: #141b24;
-  --dark2: #212c39;
-  --line: #ddd8ce;
-  /* フォント（画面・PDF） */
+  /* 色（テーマ色。編集画面の「資料全体の色」で変えられる）
+     白地・紺の文字・薄いグレーの箱・くすんだ金の強調。色は3つまで（紺・グレー・金） */
+  --ink: #1b2a4a;           /* 文字・見出し（紺） */
+  --paper: #ffffff;         /* 地 */
+  --paper2: #f3f5f8;        /* 箱の地・区切りスライドの地（薄いグレー） */
+  --accent: #96772a;        /* 強調（くすんだ金）。1スライドに1か所まで */
+  --accent-soft: #ddcf9f;   /* 区切りの大きな番号（薄い金） */
+  --muted: #7d8597;         /* 小さいラベル・番号・補足（グレー） */
+  --muted-on-dark: #a7b0c4;
+  --dark: #17223d;          /* 表紙・暗い地（濃い紺） */
+  --dark2: #24314f;
+  --glow: #2d7f96;          /* 表紙のグラデーションの光（青緑） */
+  --line: #dfe3ea;          /* 罫線 */
+  /* フォント（画面・PDF）。本文も明朝にして落ち着いた印象に。ゴシックにしたいときは --font-body を --font-sans に */
   --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
   --font-serif: "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-body: var(--font-serif);
   /* フォント（PPTX。相手の PC にもあるもの） */
   --pptx-font-sans: "Yu Gothic";
   --pptx-font-serif: "Yu Mincho";

@@ -4,13 +4,22 @@ import subprocess
 import threading
 from pathlib import Path
 
-from fastapi import Body, FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import decks
 
 app = FastAPI(title="slide-agent", docs_url=None, redoc_url=None)
+
+
+@app.middleware("http")
+async def no_stale_editor(request: Request, call_next):
+    """編集画面の JS・CSS を古いキャッシュのまま使わない（直したあと再読み込みで必ず新しくなる）。"""
+    res = await call_next(request)
+    if request.url.path.startswith("/editor/"):
+        res.headers["Cache-Control"] = "no-cache"
+    return res
 EDITOR = decks.ROOT / "editor"
 _export_lock = threading.Lock()   # Chrome を同時に何個も立ち上げない
 
@@ -101,13 +110,26 @@ def check(body: dict = Body(...)):
         fail(e)
 
 
+@app.post("/api/asset")
+async def asset(request: Request, path: str, name: str):
+    """画像を資料の assets/ に保存して、deck.html に書く src（assets/xxx.png）を返す。"""
+    data = await request.body()
+    try:
+        return {"src": decks.save_asset(path, name, data)}
+    except decks.DeckError as e:
+        fail(e)
+
+
 @app.post("/api/reveal")
 def reveal(body: dict = Body(...)):
-    """Finder で書き出したファイルを見せる（書き出し先の中だけ）。"""
-    p = Path(body["out"]).resolve()
-    if decks.OUTPUT not in p.parents or not p.exists():
-        fail(ValueError("書き出し先の外"))
-    subprocess.run(["open", "-R", str(p)], check=False)
+    """書き出したファイルを開く（open）か Finder で見せる。対象は private/final/ の中だけ。"""
+    try:
+        p = Path(body["out"]).resolve()
+        if decks.OUTPUT not in p.parents or not p.exists():
+            raise decks.DeckError("書き出し先の外")
+    except decks.DeckError as e:
+        fail(e)
+    subprocess.run(["open", str(p)] if body.get("open") else ["open", "-R", str(p)], check=False)
     return {"ok": True}
 
 
