@@ -1,7 +1,7 @@
 /* slide-agent default テーマ
    - 色・フォントは deck.html の <style data-kit="vars"> の変数で決まる。ここに色の値を直書きしない
    - 1スライド = <section class="slide">（1280×720 固定）
-   - 見た目の方針：白地に紺の文字、薄いグレーの箱と細い罫線、強調だけくすんだ金。影・グラデーション・角丸は使わない */
+   - 見た目の方針：白地に紺の文字、薄いグレーの箱と細い罫線、強調だけくすんだ金。影・角丸は使わない。グラデーションは表紙（暗い地）の背景だけ */
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-font-smoothing: antialiased; }
@@ -22,7 +22,15 @@ body {
   font-family: var(--font-body); font-size: 20px; line-height: 1.7;
   box-shadow: 0 8px 32px rgba(0,0,0,.18);
 }
-.slide[data-bg="dark"] { background: var(--dark); color: var(--paper); }
+/* 暗い地（表紙）：濃い紺に、右上の青緑と下のグレーの光をぼかして重ねる。PPTX では背景だけ画像になり、文字は直せる */
+.slide[data-bg="dark"] {
+  color: var(--paper);
+  background:
+    radial-gradient(ellipse 55% 65% at 82% 12%, color-mix(in srgb, var(--glow) 60%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 72% 108%, color-mix(in srgb, var(--muted) 45%, transparent), transparent 70%),
+    radial-gradient(ellipse 45% 55% at 0% 100%, color-mix(in srgb, var(--dark2) 90%, transparent), transparent 70%),
+    var(--dark);
+}
 .slide[data-bg="soft"] { background: var(--paper2); }
 .slide[data-align="center"] { justify-content: center; }
 .slide > :not(.bg):not(.shade):not(.logo):not(.footer) { position: relative; z-index: 1; }

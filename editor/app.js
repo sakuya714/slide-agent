@@ -198,7 +198,7 @@ function icon(name, size = 18) {
 
 const NAMES = { h1: '大見出し', h2: '見出し', h3: '小見出し', p: '本文', li: '項目', ul: '箇条書き', ol: '番号付き', img: '画像', div: '箱', span: '文字', em: '強調', strong: '太字', b: '太字', section: 'スライド', svg: '図', table: '表', small: '小さい文字', br: '改行', a: 'リンク', figure: '図', aside: 'ノート' };
 const CLASS_NAMES = { eyebrow: '見出しの上の文字', card: 'カード', stat: '数字', num: '数字', unit: '単位', label: '説明', no: '番号', tag: 'タグ', footer: '下の帯', grid: '並び', split: '左右', steps: '手順', next: '矢印', list: '一覧', kv: '項目と中身', 'big-no': '大きな番号', logo: '社名', bar: '縦線つきの文', lead: '見出しの下の1行', photo: '写真', bg: '背景の写真', shade: '写真を暗くする幕', row: '横並び', spacer: '余白' };
-const VAR_LABELS = { ink: '文字', paper: '地', paper2: '箱の地', accent: 'アクセント', 'accent-soft': 'アクセント（薄）', muted: '薄い文字', 'muted-on-dark': '薄い文字（暗い地）', dark: '暗い地', dark2: '暗い地の箱', line: '線' };
+const VAR_LABELS = { ink: '文字', paper: '地', paper2: '箱の地', accent: 'アクセント', 'accent-soft': 'アクセント（薄）', muted: '薄い文字', 'muted-on-dark': '薄い文字（暗い地）', dark: '暗い地', dark2: '暗い地の箱', glow: '表紙の光', line: '線' };
 
 const S = {
   path: null, version: null, doc: null, cur: 0, sel: null, editing: null, editBefore: '',

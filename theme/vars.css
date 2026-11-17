@@ -10,6 +10,7 @@
   --muted-on-dark: #a7b0c4;
   --dark: #17223d;          /* 表紙・暗い地（濃い紺） */
   --dark2: #24314f;
+  --glow: #2d7f96;          /* 表紙のグラデーションの光（青緑） */
   --line: #dfe3ea;          /* 罫線 */
   /* フォント（画面・PDF）。本文も明朝にして落ち着いた印象に。ゴシックにしたいときは --font-body を --font-sans に */
   --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;

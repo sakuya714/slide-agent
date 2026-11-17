@@ -17,7 +17,7 @@ git clone https://github.com/sakuya714/slide-agent.git
 cd slide-agent && ./install.sh
 ```
 
-必要なもの：Mac・Homebrew・Google Chrome（PDF・PPTX の書き出しに使う）。AI に資料を作らせるなら Claude Code。`install.sh` が `private/`・`slide` コマンドを用意する。
+必要なもの：Mac・Homebrew・Google Chrome（PDF・PPTX の書き出しに使う）。AI に資料を作らせるなら Claude Code。`install.sh` が `private/`・`slide` コマンドを用意し、見本の資料「ようこそ / Slide Agent の紹介」を入れる（`slide` で開くと最初はこれだけある。読み終わったら消してよい）。
 
 ## 使い方
 
@@ -111,6 +111,7 @@ slide-agent/
 ├── theme/           資料のデザイン（default.css）・テーマ色の初期値（vars.css）・新しい資料のひな形（new.html）
 ├── export/          PDF・PPTX への変換とチェック（Chrome で資料を表示して処理する）
 ├── hooks/           private/ を commit させない見張り
+├── welcome/         最初に入る見本の資料（ようこそ/Slide Agent の紹介）。install.sh が private/deck/ にコピーする
 ├── install.sh       セットアップ
 └── private/         ← 自分だけ（GitHub に上がらない）
     ├── deck/          作業中の資料。{フォルダ}/{資料名}/deck.html と assets/（画像）。ホームのフォルダの階層になる
