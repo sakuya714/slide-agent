@@ -28,13 +28,13 @@ const LAYOUTS = [
   <aside class="notes"></aside>
 </section>`],
   ['見出しと本文', `<section class="slide">
-  <p class="eyebrow">ラベル</p>
+  <p class="eyebrow">01 ｜ 章の名前</p>
   <h2>このスライドで言いたいこと</h2>
   <p class="lead">本文。ダブルクリックで直せる。</p>
   <aside class="notes"></aside>
 </section>`],
   ['箇条書き', `<section class="slide">
-  <p class="eyebrow">ラベル</p>
+  <p class="eyebrow">01 ｜ 章の名前</p>
   <h2>このスライドで言いたいこと</h2>
   <ul>
     <li>1つ目のポイント</li>
@@ -44,7 +44,7 @@ const LAYOUTS = [
   <aside class="notes"></aside>
 </section>`],
   ['カード3つ', `<section class="slide">
-  <p class="eyebrow">ラベル</p>
+  <p class="eyebrow">01 ｜ 章の名前</p>
   <h2>このスライドで言いたいこと</h2>
   <div class="grid cols-3">
     <div class="card"><h3>1つ目</h3><p>説明を短く。</p></div>
@@ -54,7 +54,7 @@ const LAYOUTS = [
   <aside class="notes"></aside>
 </section>`],
   ['数字で見せる', `<section class="slide">
-  <p class="eyebrow">ラベル</p>
+  <p class="eyebrow">01 ｜ 章の名前</p>
   <h2>数字が示すこと</h2>
   <div class="grid cols-3">
     <div class="stat"><span class="num">120</span><span class="label">説明</span></div>
@@ -66,7 +66,7 @@ const LAYOUTS = [
   ['左右に分ける', `<section class="slide">
   <div class="split">
     <div>
-      <p class="eyebrow">ラベル</p>
+      <p class="eyebrow">01 ｜ 章の名前</p>
       <h2>左に言いたいこと</h2>
       <p>説明を短く。右の箱は選んで「挿入 → 画像」で写真に替えられる。</p>
     </div>
@@ -98,7 +98,7 @@ const INSERTS = {
     ['本文', '<p>本文</p>'],
     ['箇条書き', '<ul>\n  <li>項目</li>\n  <li>項目</li>\n</ul>'],
     '-',
-    ['ラベル（見出しの上の小さい文字）', '<p class="eyebrow">ラベル</p>'],
+    ['見出しの上の文字（章の名前など）', '<p class="eyebrow">01 ｜ 章の名前</p>'],
     ['縦線つきの文（言いたいこと）', '<p class="bar">伝えたいこと</p>'],
     ['タグ', '<span class="tag">タグ</span>'],
   ],
@@ -126,7 +126,7 @@ const ICONS = {
   image: '<rect x="3" y="4" width="14" height="12" rx="1.6"/><circle cx="7.3" cy="8" r="1.3"/><path d="m3.5 14 4-3.8 3 2.8 2.2-2 3.8 3.5"/>',
   grid: '<rect x="3" y="3.5" width="6" height="5.5" rx="1"/><rect x="11" y="3.5" width="6" height="5.5" rx="1"/><rect x="3" y="11" width="6" height="5.5" rx="1"/><rect x="11" y="11" width="6" height="5.5" rx="1"/>',
   play: '<path d="M6.5 4.5v11l8.5-5.5z" fill="currentColor"/>',
-  more: '<circle cx="4.5" cy="10" r=".6"/><circle cx="10" cy="10" r=".6"/><circle cx="15.5" cy="10" r=".6"/>',
+  back: '<path d="M12.5 4.5 7 10l5.5 5.5"/>',
   caret: '<path d="m6.5 8.5 3.5 3.5 3.5-3.5"/>',
 };
 function icon(name, size = 18) {
@@ -136,13 +136,13 @@ function icon(name, size = 18) {
 }
 
 const NAMES = { h1: '大見出し', h2: '見出し', h3: '小見出し', p: '本文', li: '項目', ul: '箇条書き', ol: '番号付き', img: '画像', div: '箱', span: '文字', em: '強調', strong: '太字', b: '太字', section: 'スライド', svg: '図', table: '表', small: '小さい文字', br: '改行', a: 'リンク', figure: '図', aside: 'ノート' };
-const CLASS_NAMES = { eyebrow: 'ラベル', card: 'カード', stat: '数字', num: '数字', label: '説明', tag: 'タグ', footer: '下の帯', grid: '並び', split: '左右', bar: '縦線つきの文', lead: 'リード文', photo: '写真', bg: '背景画像', shade: '暗幕', row: '横並び', spacer: '余白' };
+const CLASS_NAMES = { eyebrow: '見出しの上の文字', card: 'カード', stat: '数字', num: '数字', label: '説明', tag: 'タグ', footer: '下の帯', grid: '並び', split: '左右', bar: '縦線つきの文', lead: 'リード文', photo: '写真', bg: '背景の写真', shade: '写真を暗くする幕', row: '横並び', spacer: '余白' };
 const VAR_LABELS = { ink: '文字', paper: '地', paper2: '箱の地', accent: 'アクセント', 'accent-soft': 'アクセント（薄）', muted: '薄い文字', 'muted-on-dark': '薄い文字（暗い地）', dark: '暗い地', dark2: '暗い地の箱', line: '線' };
 
 const S = {
   path: null, version: null, doc: null, cur: 0, sel: null, editing: null, editBefore: '',
   undo: [], redo: [], snap: null, dirty: false, saving: false, saveTimer: null, conflict: false,
-  zoom: 'fit', focus: 'stage', issues: null, issuesStale: false, menu: null, menuAnchor: null, exporting: false,
+  zoom: 'fit', focus: 'stage', issues: null, menu: null, menuAnchor: null, exporting: false,
 };
 
 // ---------- 小物 ----------
@@ -229,7 +229,6 @@ function commit({ structural = false } = {}) {
   if (S.undo.length > 200) S.undo.shift();
   S.redo = [];
   S.snap = snap;
-  if (S.issues) S.issuesStale = true;
   markDirty();
   if (structural) renderThumbs(); else refreshThumb(S.cur);
   updateUndoBtns();
@@ -593,7 +592,8 @@ function pick(target) {
   if (!t || !t.closest) return null;
   const slide = t.closest('section.slide');
   if (!slide) return null;
-  return t.closest('aside.notes') ? slide : t;
+  // 背景の写真と暗くする幕はスライドの一部として扱う（右パネルはスライドの設定になる）
+  return t.closest('aside.notes, img.bg, .shade') ? slide : t;
 }
 function select(node) {
   S.doc?.querySelectorAll('[data-kit-sel]').forEach((e) => e.removeAttribute('data-kit-sel'));
@@ -912,11 +912,9 @@ function swatchRow(current, onPick, { transparent = false } = {}) {
   if (transparent) box.append(el('button', { class: 'sw clear' + (current === 'transparent' ? ' on' : ''), title: '透明', onclick: () => onPick('transparent') }, '∅'));
   return box;
 }
-// 色は見本が多いので、ラベルを上に置いて横幅いっぱいに並べる。直していれば右に「↺」
+// 色は見本が多いので、ラベルを上に置いて横幅いっぱいに並べる（戻すときは ⌘Z）
 function colorField(label, current, onPick, opts) {
-  return el('div', { class: 'field stack' },
-    el('label', {}, label, current ? el('button', { class: 'link', title: 'テーマの見た目に戻す', onclick: () => onPick('') }, '↺ 戻す') : null),
-    swatchRow(current, onPick, opts));
+  return el('div', { class: 'field stack' }, el('label', {}, label), swatchRow(current, onPick, opts));
 }
 function field(label, ...kids) { return el('div', { class: 'field' }, el('label', {}, label), el('div', {}, ...kids)); }
 function seg(options, current, onPick) {
@@ -970,7 +968,7 @@ function elementPanel(n) {
     out.push(sec('画像',
       field('合わせ方', seg([['cover', '切り抜く'], ['contain', '全体を見せる']], fitMode, (v) => styleChange(n, 'objectFit', v === 'cover' ? '' : v))),
       el('div', { class: 'fmt' }, el('button', { title: 'ファイルをこの画像の上にドラッグしても差し替えられる', onclick: () => pickImage(n) }, '画像を差し替え…'))));
-  } else if (!n.matches('svg, br')) {
+  } else if (!n.matches('svg, br') && n.textContent.trim()) {
     const size = Math.round(parseFloat(cs.fontSize));
     const inp = el('input', { type: 'number', min: '8', max: '200', value: String(size) });
     inp.addEventListener('change', () => styleChange(n, 'fontSize', inp.value ? `${inp.value}px` : ''));
@@ -981,13 +979,11 @@ function elementPanel(n) {
       field('大きさ', el('div', { class: 'num-in' },
         el('button', { onclick: () => styleChange(n, 'fontSize', `${Math.max(8, size - 2)}px`) }, '−'),
         inp,
-        el('button', { onclick: () => styleChange(n, 'fontSize', `${size + 2}px`) }, '＋'),
-        n.style.fontSize ? el('button', { class: 'link', title: 'テーマの大きさに戻す', onclick: () => styleChange(n, 'fontSize', '') }, '↺') : null)),
+        el('button', { onclick: () => styleChange(n, 'fontSize', `${size + 2}px`) }, '＋'))),
       field('太さ', seg([['400', '標準'], ['700', '太字']], bold ? '700' : '400', (v) => styleChange(n, 'fontWeight', v))),
       field('揃え', seg([['left', '左'], ['center', '中央'], ['right', '右']], al, (v) => styleChange(n, 'textAlign', v)))));
   }
   out.push(sec('箱', colorField('背景色', n.style.backgroundColor, (v) => styleChange(n, 'backgroundColor', v), { transparent: true })));
-  out.push(el('div', { class: 'ins-foot' }, el('button', { class: 'link', onclick: () => editHTML(n) }, 'HTML を編集…')));
   return out;
 }
 
@@ -1007,14 +1003,9 @@ function slidePanel(slide) {
       v === 'center' ? slide.setAttribute('data-align', 'center') : slide.removeAttribute('data-align');
       commit(); renderInspector();
     }))));
-  if (S.issues) {
-    const list = S.issues.filter((x) => x.slide === S.cur + 1);
-    out.push(sec('チェック' + (S.issuesStale ? '（直したあとは、もう一度チェック）' : ''),
-      list.length
-        ? el('ul', { class: 'issues' }, list.map((x) => el('li', { class: x.level }, x.msg, el('span', { class: 'where' }, x.where))))
-        : el('p', { class: 'muted-note' }, '問題なし')));
-  }
-  out.push(el('div', { class: 'ins-foot' }, el('button', { class: 'link', onclick: () => editHTML(slide) }, 'スライドの HTML を編集…')));
+  const bg = slide.querySelector(':scope > img.bg');
+  if (bg) out.push(sec('背景の写真', el('div', { class: 'fmt' }, el('button', { onclick: () => pickImage(bg) }, '写真を差し替え…'))));
+  out.push(el('div', { class: 'ins-foot' }, el('button', { class: 'link', onclick: themeDialog }, '資料全体の色…')));
   return out;
 }
 
@@ -1179,18 +1170,8 @@ function zoomMenu() {
 }
 function exportMenu() {
   return [
-    { label: 'PDF', hint: '画面と同じ見た目', run: () => doExport('pdf') },
-    { label: 'PowerPoint（PPTX）', hint: '文字を直せる', run: () => doExport('pptx') },
-    '-',
-    { label: '書き出し先を Finder で開く', run: () => api('POST', '/api/reveal', { deck: S.path, where: 'final' }).catch((e) => toast(e.message)) },
-  ];
-}
-function moreMenu() {
-  return [
-    { label: 'テーマ色（資料全体の色）…', run: themeDialog },
-    { label: '資料のフォルダを Finder で開く', run: () => api('POST', '/api/reveal', { deck: S.path, where: 'deck' }).catch((e) => toast(e.message)) },
-    '-',
-    { label: 'ショートカット一覧', hint: '⌘/', run: shortcutsDialog },
+    { label: 'PDF', run: () => doExport('pdf') },
+    { label: 'PowerPoint（PPTX）', run: () => doExport('pptx') },
   ];
 }
 
@@ -1205,7 +1186,7 @@ async function runCheck() {
   b.firstChild.textContent = 'チェック中…';
   try {
     const r = await api('POST', '/api/check', { path: S.path });
-    S.issues = r.issues; S.issuesStale = false;
+    S.issues = r.issues;
     renderCheckBadge();
     renderThumbs();
     if (document.body.classList.contains('view-grid')) renderSorter();
@@ -1451,7 +1432,6 @@ $('#zoomBtn').onclick = (e) => openMenu(e.currentTarget, zoomMenu());
 $('#checkBtn').onclick = () => (S.menuAnchor === $('#checkBtn') ? closeMenu() : runCheck());
 $('#presentBtn').onclick = () => startPresent(S.cur);
 $('#exportBtn').onclick = (e) => openMenu(e.currentTarget, exportMenu());
-$('#moreBtn').onclick = (e) => openMenu(e.currentTarget, moreMenu());
 $('#newDeckBtn').onclick = newDeckDialog;
 $('#homeSearch').addEventListener('input', renderHome);
 $('#homeSearch').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) $('#homeBody .deck-card')?.click(); });

@@ -122,15 +122,8 @@ async def asset(request: Request, path: str, name: str):
 
 @app.post("/api/reveal")
 def reveal(body: dict = Body(...)):
-    """Finder で見せる・開く。対象は private/ の中だけ。
-    {out, open?}：書き出したファイル（open なら既定のアプリで開く）
-    {deck, where: "deck" | "final"}：資料のフォルダ／書き出し先のフォルダ"""
+    """書き出したファイルを開く（open）か Finder で見せる。対象は private/final/ の中だけ。"""
     try:
-        if "deck" in body:
-            d = decks.safe(body["deck"])
-            p = d if body.get("where") != "final" else decks.output_path(d, "pdf").parent
-            subprocess.run(["open", str(p)], check=False)
-            return {"ok": True}
         p = Path(body["out"]).resolve()
         if decks.OUTPUT not in p.parents or not p.exists():
             raise decks.DeckError("書き出し先の外")
