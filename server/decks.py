@@ -115,6 +115,32 @@ def new(rel: str) -> str:
     return "/".join(parts)
 
 
+IMAGE_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"}
+MAX_ASSET = 30 * 1024 * 1024
+BAD_NAME = re.compile(r"[^\w\-.]+")
+
+
+def save_asset(rel: str, name: str, data: bytes) -> str:
+    """画像を {資料}/assets/ に保存。同じ名前があれば -2, -3 … を付ける。返り値は deck.html に書く src。"""
+    d = safe(rel)
+    if not (d / DECK_FILE).exists():
+        raise DeckError("資料が無い")
+    if not data or len(data) > MAX_ASSET:
+        raise DeckError("画像が空か、大きすぎる（30MB まで）")
+    stem, ext = os.path.splitext(Path(name or "image.png").name)
+    ext = ext.lower()
+    if ext not in IMAGE_EXT:
+        raise DeckError("画像は PNG・JPEG・GIF・WebP・SVG だけ")
+    stem = BAD_NAME.sub("_", stem).strip("._") or "image"
+    assets = d / "assets"
+    assets.mkdir(exist_ok=True)
+    out, i = assets / f"{stem}{ext}", 2
+    while out.exists():
+        out, i = assets / f"{stem}-{i}{ext}", i + 1
+    out.write_bytes(data)
+    return f"assets/{out.name}"
+
+
 def output_path(deck_dir: Path, ext: str) -> Path:
     """書き出し先：private/final/ の中に、資料と同じ階層で。"""
     rel = Path(rel_of(deck_dir))

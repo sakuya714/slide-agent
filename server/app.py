@@ -4,7 +4,7 @@ import subprocess
 import threading
 from pathlib import Path
 
-from fastapi import Body, FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -101,13 +101,33 @@ def check(body: dict = Body(...)):
         fail(e)
 
 
+@app.post("/api/asset")
+async def asset(request: Request, path: str, name: str):
+    """画像を資料の assets/ に保存して、deck.html に書く src（assets/xxx.png）を返す。"""
+    data = await request.body()
+    try:
+        return {"src": decks.save_asset(path, name, data)}
+    except decks.DeckError as e:
+        fail(e)
+
+
 @app.post("/api/reveal")
 def reveal(body: dict = Body(...)):
-    """Finder で書き出したファイルを見せる（書き出し先の中だけ）。"""
-    p = Path(body["out"]).resolve()
-    if decks.OUTPUT not in p.parents or not p.exists():
-        fail(ValueError("書き出し先の外"))
-    subprocess.run(["open", "-R", str(p)], check=False)
+    """Finder で見せる・開く。対象は private/ の中だけ。
+    {out, open?}：書き出したファイル（open なら既定のアプリで開く）
+    {deck, where: "deck" | "final"}：資料のフォルダ／書き出し先のフォルダ"""
+    try:
+        if "deck" in body:
+            d = decks.safe(body["deck"])
+            p = d if body.get("where") != "final" else decks.output_path(d, "pdf").parent
+            subprocess.run(["open", str(p)], check=False)
+            return {"ok": True}
+        p = Path(body["out"]).resolve()
+        if decks.OUTPUT not in p.parents or not p.exists():
+            raise decks.DeckError("書き出し先の外")
+    except decks.DeckError as e:
+        fail(e)
+    subprocess.run(["open", str(p)] if body.get("open") else ["open", "-R", str(p)], check=False)
     return {"ok": True}
 
 
