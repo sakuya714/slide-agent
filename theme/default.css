@@ -22,12 +22,22 @@ body {
   font-family: var(--font-body); font-size: 20px; line-height: 1.7;
   box-shadow: 0 8px 32px rgba(0,0,0,.18);
 }
-/* 暗い地（表紙）：濃い紺に、右上の青緑と下のグレーの光をぼかして重ねる。PPTX では背景だけ画像になり、文字は直せる */
+/* 元の色を覚えておく（暗い地で変数を入れ替えたあとに使う） */
+:root { --paper-base: var(--paper); --muted-base: var(--muted); }
+/* 暗い地（表紙など）：色の変数を入れ替える。部品は色を var() で書いているので、文字は明るく・箱は暗くなる。
+   白い地・グレーの地と行き来しても、大きさや並びは変わらない。資料ごとの部品（<style data-deck>）も var() で色を書けば同じように切り替わる。
+   背景は濃い紺に、右上の青緑と下のグレーの光をぼかして重ねる。PPTX では背景だけ画像になり、文字は直せる */
 .slide[data-bg="dark"] {
-  color: var(--paper);
+  --ink: var(--paper-base);
+  --paper: var(--dark);
+  --paper2: var(--dark2);
+  --muted: var(--muted-on-dark);
+  --line: color-mix(in srgb, var(--paper-base) 18%, transparent);
+  --accent: var(--accent-soft);
+  color: var(--ink);
   background:
     radial-gradient(ellipse 55% 65% at 82% 12%, color-mix(in srgb, var(--glow) 60%, transparent), transparent 70%),
-    radial-gradient(ellipse 50% 45% at 72% 108%, color-mix(in srgb, var(--muted) 45%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 72% 108%, color-mix(in srgb, var(--muted-base) 45%, transparent), transparent 70%),
     radial-gradient(ellipse 45% 55% at 0% 100%, color-mix(in srgb, var(--dark2) 90%, transparent), transparent 70%),
     var(--dark);
 }
@@ -46,7 +56,6 @@ body {
 .slide strong { font-weight: 700; }
 .slide .lead  { font-size: 26px; line-height: 1.6; }
 .slide .muted { color: var(--muted); }
-.slide[data-bg="dark"] .muted { color: var(--muted-on-dark); }
 .slide .small { font-size: 15px; line-height: 1.6; }
 
 /* 見出しの上の小さい文字（章の名前など）。すぐ下の見出しに寄せる */
@@ -55,7 +64,6 @@ body {
   color: var(--muted);
 }
 .slide .eyebrow + h1, .slide .eyebrow + h2 { margin-top: -16px; }
-.slide[data-bg="dark"] .eyebrow { color: var(--muted-on-dark); }
 /* 見出しのすぐ下の1行（このスライドで言いたいこと） */
 .slide h2 + .lead { margin-top: -8px; }
 .slide h2 + .lead + :not(.spacer):not(.notes) { margin-top: 18px; }
@@ -97,8 +105,6 @@ body {
 }
 .card h3 { font-size: 24px; }
 .card p  { font-size: 17px; line-height: 1.8; color: var(--ink); }
-.slide[data-bg="dark"] .card { background: var(--dark2); }
-.slide[data-bg="dark"] .card p { color: var(--paper); }
 
 /* 番号（01・02…）。カードや一覧の頭に置く */
 .slide .no { font-family: var(--font-serif); font-size: 38px; line-height: 1.1; font-weight: 400; color: var(--muted); }
@@ -132,7 +138,6 @@ body {
 .stat .num   { font-family: var(--font-serif); font-size: 80px; line-height: 1.05; font-weight: 400; color: var(--ink); }
 .stat .unit  { font-size: 26px; margin-left: 6px; }
 .stat .label { font-size: 15px; line-height: 1.5; letter-spacing: .1em; color: var(--muted); }
-.slide[data-bg="dark"] .stat .num { color: var(--paper); }
 
 /* 区切りスライドの大きな番号。<section class="slide" data-bg="soft" data-align="center"><div class="row"><span class="big-no">01</span><div>…</div></div> */
 .big-no { font-family: var(--font-serif); font-size: 190px; line-height: 1; font-weight: 400; color: var(--accent-soft); flex: none; width: 240px; }
@@ -149,7 +154,6 @@ body {
   display: flex; justify-content: space-between;
   font-size: 14px; line-height: 1.5; color: var(--muted); letter-spacing: .04em;
 }
-.slide[data-bg="dark"] .footer { color: var(--muted-on-dark); }
 
 /* ---- 印刷（PDF） ---- */
 @page { size: 1280px 720px; margin: 0; }
