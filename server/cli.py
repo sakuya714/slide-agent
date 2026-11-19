@@ -5,9 +5,9 @@ import argparse, sys, time
 from . import decks
 
 
-def cmd_export(kind: str, target: str) -> int:
+def cmd_export(kind: str, target: str, dest: str | None) -> int:
     d = decks.resolve_deck(target)
-    out = decks.output_path(d, kind)
+    out = decks.export_path(d, kind, dest)
     t = time.time()
     if kind == "pdf":
         from export.pdf import export
@@ -36,7 +36,10 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("serve"); s.add_argument("--port", type=int, default=8770)
     for k in ("pdf", "pptx", "check"):
-        sub.add_parser(k).add_argument("deck", help="資料（private/deck/ からのパス 例：営業/〇〇社_提案）")
+        sp = sub.add_parser(k)
+        sp.add_argument("deck", help="資料（private/deck/ からのパス 例：営業/〇〇社_提案）")
+        if k != "check":
+            sp.add_argument("-o", "--out", help="保存先のフォルダかファイル（省略すると ~/Downloads）")
     sub.add_parser("new").add_argument("path", help="例：営業/〇〇社_提案")
     a = ap.parse_args(argv)
     try:
@@ -45,7 +48,7 @@ def main(argv=None) -> int:
             uvicorn.run("server.app:app", host="127.0.0.1", port=a.port, log_level="warning")
             return 0
         if a.cmd in ("pdf", "pptx"):
-            return cmd_export(a.cmd, a.deck)
+            return cmd_export(a.cmd, a.deck, a.out)
         if a.cmd == "check":
             return cmd_check(a.deck)
         if a.cmd == "new":

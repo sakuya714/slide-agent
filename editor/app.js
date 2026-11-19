@@ -1311,25 +1311,50 @@ function showCheckMenu() {
 }
 
 // ---------- 書き出し ----------
+// 保存先はブラウザの保存ダイアログで選ぶ（Chrome・Edge。前回のフォルダを覚えている）。
+// ダイアログが使えないブラウザでは、ふつうのダウンロード（ダウンロードフォルダ）になる。
+const EXPORT_TYPES = {
+  pdf: { description: 'PDF', accept: { 'application/pdf': ['.pdf'] } },
+  pptx: { description: 'PowerPoint', accept: { 'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['.pptx'] } },
+};
+async function pickSaveFile(kind, file) {
+  if (!window.showSaveFilePicker) return null;
+  try {
+    return await window.showSaveFilePicker({ id: 'slide-export', suggestedName: file, types: [EXPORT_TYPES[kind]] });
+  } catch (e) {
+    if (e.name === 'AbortError') throw e;   // キャンセル
+    return null;                             // 開けないときはふつうのダウンロードにする
+  }
+}
 async function doExport(kind) {
   if (!S.path || S.exporting) return;
   if (S.editing) endEdit();
-  if (S.dirty) await save();
   if (S.conflict) { toast('先に「外で変更された」を解決して'); return; }
   const name = kind === 'pdf' ? 'PDF' : 'PPTX';
+  const file = `${S.path.split('/').pop()}.${kind}`;
+  // 保存先は先に選ぶ（押した直後でないと保存ダイアログを開けない）
+  let handle;
+  try { handle = await pickSaveFile(kind, file); } catch { return; }
+  if (S.dirty) await save();
   const b = $('#exportBtn');
   S.exporting = true; b.disabled = true; b.firstChild.textContent = `${name} を書き出し中…`;
   toast(`${name} を書き出し中…（数秒かかる）`, { ms: 60000 });
   try {
-    const r = await api('POST', '/api/export', { path: S.path, kind });
-    const extra = r.raster ? `・画像になった部分 ${r.raster}` : '';
-    toast([`✔ ${name}（${r.slides}枚${extra}）`, el('span', { class: 'sub' }, `private/${r.rel}`)], {
-      ms: 9000,
-      actions: [
-        el('button', { class: 'small primary', onclick: () => api('POST', '/api/reveal', { out: r.out, open: true }) }, '開く'),
-        el('button', { class: 'small', onclick: () => api('POST', '/api/reveal', { out: r.out }) }, 'Finder で表示'),
-      ],
-    });
+    const r = await fetch('/api/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: S.path, kind }) });
+    if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.detail || `${r.status}`); }
+    const blob = await r.blob();
+    if (handle) {
+      const w = await handle.createWritable();
+      await w.write(blob);
+      await w.close();
+    } else {
+      const a = el('a', { href: URL.createObjectURL(blob), download: file });
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+    }
+    const raster = Number(r.headers.get('X-Raster')) || 0;
+    const extra = raster ? `・画像になった部分 ${raster}` : '';
+    toast([`✔ ${name}（${r.headers.get('X-Slides')}枚${extra}）`, el('span', { class: 'sub' }, handle ? `${handle.name} に保存した` : 'ダウンロードフォルダに保存した')], { ms: 6000 });
   } catch (e) {
     toast('✖ ' + e.message, { ms: 8000 });
   } finally {

@@ -6,7 +6,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent          # slide-agent/
 PRIVATE = Path(os.environ.get("SLIDE_AGENT_PRIVATE", ROOT / "private")).resolve()   # ユーザーのもの全部（Git 管理外）
 DECKS = PRIVATE / "deck"                                 # 資料の本体（ホームに出るのはここ）
-OUTPUT = PRIVATE / "final"                               # 完成品：書き出した PDF・PPTX（中は資料ごと）
 THEME = ROOT / "theme"
 DECK_FILE = "deck.html"
 BAK_FILE = ".deck.bak.html"
@@ -141,9 +140,21 @@ def save_asset(rel: str, name: str, data: bytes) -> str:
     return f"assets/{out.name}"
 
 
-def output_path(deck_dir: Path, ext: str) -> Path:
-    """書き出し先：private/final/ の中に、資料と同じ階層で。"""
-    rel = Path(rel_of(deck_dir))
-    out = OUTPUT / rel.parent / f"{rel.name}.{ext}"
-    out.parent.mkdir(parents=True, exist_ok=True)
+def export_path(deck_dir: Path, ext: str, dest: str | None = None) -> Path:
+    """コマンドで書き出すときの保存先。
+    dest を省くと ~/Downloads、フォルダならその中に「資料名.ext」。同じ名前があれば -2, -3 … を付ける。
+    dest がファイル名なら、そのまま（上書きする）。"""
+    name = f"{deck_dir.name}.{ext}"
+    if dest:
+        p = Path(dest).expanduser().resolve()
+        if not (p.is_dir() or dest.endswith("/")):
+            p.parent.mkdir(parents=True, exist_ok=True)
+            return p
+        folder = p
+    else:
+        folder = Path.home() / "Downloads"
+    folder.mkdir(parents=True, exist_ok=True)
+    out, i = folder / name, 2
+    while out.exists():
+        out, i = folder / f"{deck_dir.name}-{i}.{ext}", i + 1
     return out

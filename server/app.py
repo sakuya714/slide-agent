@@ -1,11 +1,12 @@
 """slide-agent のローカルサーバー（127.0.0.1 だけ）。編集画面・資料の読み書き・書き出し。"""
 from __future__ import annotations
-import subprocess
+import tempfile
 import threading
 from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import Body, FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from . import decks
@@ -35,7 +36,7 @@ def index():
 
 @app.get("/api/ping")
 def ping():
-    return {"ok": True, "decks": str(decks.DECKS), "output": str(decks.OUTPUT)}
+    return {"ok": True, "decks": str(decks.DECKS)}
 
 
 @app.get("/api/tree")
@@ -79,25 +80,38 @@ def new_deck(body: dict = Body(...)):
         fail(e)
 
 
+MEDIA = {"pdf": "application/pdf",
+         "pptx": "application/vnd.openxmlformats-officedocument.presentationml.presentation"}
+
+
 @app.post("/api/export")
 def export(body: dict = Body(...)):
+    """PDF・PPTX を一時フォルダに作って、そのまま返す。保存先は画面（ブラウザ）で選ぶので、サーバー側には残さない。"""
     kind = body.get("kind")
-    if kind not in ("pdf", "pptx"):
+    if kind not in MEDIA:
         fail(ValueError("kind は pdf か pptx"))
     try:
         d = decks.safe(body["path"])
-        out = decks.output_path(d, kind)
-        with _export_lock:
-            if kind == "pdf":
-                from export.pdf import export as run
-            else:
-                from export.pptx import export as run
+        if not (d / decks.DECK_FILE).exists():
+            raise decks.DeckError("資料が無い")
+        if kind == "pdf":
+            from export.pdf import export as run
+        else:
+            from export.pptx import export as run
+        with _export_lock, tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / f"out.{kind}"
             info = run(d, out)
+            data = out.read_bytes()
     except decks.DeckError as e:
         fail(e)
     except Exception as e:  # 変換の失敗は画面に出す
         fail(RuntimeError(f"書き出しに失敗: {e}"), 500)
-    return {"out": str(out), "rel": str(out.relative_to(decks.PRIVATE)), **info}
+    name = f"{d.name}.{kind}"
+    return Response(data, media_type=MEDIA[kind], headers={
+        "Content-Disposition": f"attachment; filename*=UTF-8''{quote(name)}",
+        "X-Slides": str(info["slides"]),
+        "X-Raster": str(info.get("raster", 0)),
+    })
 
 
 @app.post("/api/check")
@@ -118,19 +132,6 @@ async def asset(request: Request, path: str, name: str):
         return {"src": decks.save_asset(path, name, data)}
     except decks.DeckError as e:
         fail(e)
-
-
-@app.post("/api/reveal")
-def reveal(body: dict = Body(...)):
-    """書き出したファイルを開く（open）か Finder で見せる。対象は private/final/ の中だけ。"""
-    try:
-        p = Path(body["out"]).resolve()
-        if decks.OUTPUT not in p.parents or not p.exists():
-            raise decks.DeckError("書き出し先の外")
-    except decks.DeckError as e:
-        fail(e)
-    subprocess.run(["open", str(p)] if body.get("open") else ["open", "-R", str(p)], check=False)
-    return {"ok": True}
 
 
 # 資料のファイル（deck.html・画像）。iframe はここから読む
