@@ -1080,6 +1080,9 @@ function slidePanel(slide) {
   out.push(sec('背景',
     field('地', seg([['light', '白'], ['soft', 'グレー'], ['dark', '暗い']], bgKind, (v) => {
       v === 'light' ? slide.removeAttribute('data-bg') : slide.setAttribute('data-bg', v);
+      // 地を選び直したら、「色」で付けた背景色は外す（残すと、暗い色の上に暗い文字が乗って読めなくなる）
+      slide.style.backgroundColor = '';
+      if (!slide.getAttribute('style')) slide.removeAttribute('style');
       commit(); renderInspector();
     })),
     colorField('色', slide.style.backgroundColor, (v) => styleChange(slide, 'backgroundColor', v))));
