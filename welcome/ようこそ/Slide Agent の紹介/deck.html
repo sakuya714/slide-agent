@@ -170,22 +170,23 @@ body {
 </style>
 <style data-kit="vars">
 :root {
-  /* 色（slide-agent の色）。紺で塗る＝表の見出し行だけ／金＝番号・矢印・印・要点の言葉／薄いグレー＝箱と帯 */
-  --ink: #1b2a4a;           /* 見出し・太字（紺） */
-  --text: #27324a;          /* 本文 */
+  /* 色。紺で塗る＝表の見出し行だけ／金＝番号・矢印・印・要点の言葉／薄いグレー＝箱と帯 */
+  --ink: #1b2a4c;           /* 見出し・太字・枠（紺） */
+  --text: #26314a;          /* 本文（濃いめ） */
   --paper: #ffffff;         /* 地 */
-  --paper2: #f3f5f8;        /* 箱・帯（薄いグレー） */
-  --accent: #96772a;        /* 金：要点の言葉 */
-  --accent-soft: #b5975a;   /* 金：番号・矢印・印 */
-  --muted: #586075;         /* 補足・ラベル */
-  --faint: #7d8597;         /* 下の帯 */
-  --gold-on-dark: #ddcf9f;  /* 紺の上の金 */
-  --muted-on-dark: #a7b0c4;
-  --dark: #17223d;          /* 表紙（濃い紺） */
-  --dark2: #24314f;
+  --paper2: #f5f6f8;        /* 箱・表の強調（薄いグレー。全部これ） */
+  --accent: #8f6f12;        /* 金：要点の言葉 */
+  --accent-soft: #b09339;   /* 金：矢印・印 */
+  --muted: #4a5165;         /* 補足・出典・記号（薄い文字はこの1色） */
+  --faint: #7a7f8c;         /* 下の©・ページ番号 */
+  --gold-on-dark: #d8bd6a;  /* 紺の上の金 */
+  --muted-on-dark: #aab5c9;
+  --dark: #1b2a4c;          /* 表紙（紺） */
+  --dark2: #24365e;
   --glow: #2d7f96;          /* 表紙の光（青緑） */
-  --line: #dfe3ea;          /* 罫線 */
-  --edge: #c9cfd9;          /* 図の箱の細い枠 */
+  --line: #dde1e8;          /* 表の細い罫線 */
+  --edge: #c6ccd7;          /* 図の箱の細い枠 */
+  /* 見出しも本文も明朝（見出し W6・本文 W3） */
   --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
   --font-serif: "Hiragino Mincho ProN", "Yu Mincho", serif;
   --font-body: var(--font-serif);
