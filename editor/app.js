@@ -338,7 +338,7 @@ async function save({ force = false } = {}) {
     const r = await api('PUT', '/api/deck', { path: S.path, html: serialize(), base: S.version, force });
     if (r.status === 409) { showConflict(); setStatus('error', '保存できていない'); return; }
     S.version = r.version; S.dirty = false; S.conflict = false; hideBanner();
-    setStatus('saved', '保存済み');
+    setStatus('saved', '保存済');
   } catch (e) {
     setStatus('error', '保存に失敗：' + e.message);
   } finally {
@@ -501,7 +501,7 @@ async function openDeck(path, { keepPlace = false } = {}) {
   $('#deckFolder').textContent = parts.join(' / ');
   $('#deckName').title = path;
   document.title = `${$('#deckName').textContent} — Slide Agent`;
-  setStatus('saved', '保存済み');
+  setStatus('saved', '保存済');
   document.body.classList.remove('mode-home');
   $('#main').hidden = false; $('#home').hidden = true;
   const html = d.html.replace(/<head([^>]*)>/i, (m) => `${m}<base data-kit="base" href="/deck/${enc(path)}/">`);
@@ -1280,7 +1280,7 @@ async function runCheck() {
     renderThumbs();
     if (document.body.classList.contains('view-grid')) renderSorter();
     renderInspector();
-    showCheckMenu();
+    openCheckMenu(true);
   } catch (e) {
     toast('チェックできない：' + e.message);
   } finally {
@@ -1571,7 +1571,25 @@ $('#slideDupBtn').onclick = () => dupSlide();
 $('#slideDelBtn').onclick = () => delSlide();
 $('#viewBtn').onclick = () => toggleGrid();
 $('#zoomBtn').onclick = (e) => openMenu(e.currentTarget, zoomMenu());
-$('#checkBtn').onclick = () => (S.menuAnchor === $('#checkBtn') ? closeMenu() : runCheck());
+$('#checkBtn').onclick = () => runCheck();
+// チェックの結果：押したあとは開いたまま（外を押すと閉じる）。閉じたあとは、ボタンにカーソルを当てると前の結果がまた出る
+let checkHoverTimer = null;
+function openCheckMenu(pinned) {
+  clearTimeout(checkHoverTimer);
+  showCheckMenu();
+  S.checkPinned = pinned;
+  S.menu.addEventListener('mouseenter', () => clearTimeout(checkHoverTimer));
+  S.menu.addEventListener('mouseleave', closeCheckSoon);
+}
+function closeCheckSoon() {
+  clearTimeout(checkHoverTimer);
+  checkHoverTimer = setTimeout(() => { if (S.menuAnchor === $('#checkBtn') && !S.checkPinned) closeMenu(); }, 300);
+}
+$('#checkBtn').addEventListener('mouseenter', () => {
+  clearTimeout(checkHoverTimer);
+  if (S.issues && !S.menu && !$('#checkBtn').disabled) openCheckMenu(false);   // 別のメニューが開いているときは出さない
+});
+$('#checkBtn').addEventListener('mouseleave', closeCheckSoon);
 $('#presentBtn').onclick = () => startPresent(S.cur);
 $('#exportBtn').onclick = (e) => openMenu(e.currentTarget, exportMenu());
 $('#newDeckBtn').onclick = newDeckDialog;
