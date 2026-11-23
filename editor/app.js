@@ -1317,8 +1317,13 @@ function showCheckMenu() {
 }
 
 // ---------- 書き出し ----------
-// 保存先はブラウザの保存ダイアログで選ぶ（Chrome・Edge。前回のフォルダを覚えている）。
+// Mac：保存先は macOS の保存画面で選び、ファイルはサーバーが書く（/api/export-save）。
+//   ブラウザの保存画面で保存すると、ファイル名の濁点が「フ＋゜」のように分かれた形（NFD）になり、
+//   Windows やメールで名前が崩れて見えることがあるため。サーバーは NFC の名前で書く。
+// ほか：保存先はブラウザの保存ダイアログで選ぶ（Chrome・Edge。前回のフォルダを覚えている）。
 // ダイアログが使えないブラウザでは、ふつうのダウンロード（ダウンロードフォルダ）になる。
+let nativeSave = false;
+fetch('/api/ping').then((r) => r.json()).then((d) => { nativeSave = !!d.native_save; }).catch(() => {});
 const EXPORT_TYPES = {
   pdf: { description: 'PDF', accept: { 'application/pdf': ['.pdf'] } },
   pptx: { description: 'PowerPoint', accept: { 'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['.pptx'] } },
@@ -1338,6 +1343,7 @@ async function doExport(kind) {
   if (S.conflict) { toast('先に「外で変更された」を解決して'); return; }
   const name = kind === 'pdf' ? 'PDF' : 'PPTX';
   const file = `${S.path.split('/').pop()}.${kind}`;
+  if (nativeSave) return exportNative(kind, name);
   // 保存先は先に選ぶ（押した直後でないと保存ダイアログを開けない）
   let handle;
   try { handle = await pickSaveFile(kind, file); } catch { return; }
@@ -1363,6 +1369,25 @@ async function doExport(kind) {
     toast([`✔ ${name}（${r.headers.get('X-Slides')}枚${extra}）`, el('span', { class: 'sub' }, handle ? `${handle.name} に保存した` : 'ダウンロードフォルダに保存した')], { ms: 6000 });
   } catch (e) {
     toast('✖ ' + e.message, { ms: 8000 });
+  } finally {
+    S.exporting = false; b.disabled = false; b.firstChild.textContent = '書き出し';
+  }
+}
+// Mac：サーバーが macOS の保存画面を出し、選んだ場所に NFC の名前で書く
+async function exportNative(kind, name) {
+  if (S.dirty) await save();
+  const b = $('#exportBtn');
+  S.exporting = true; b.disabled = true; b.firstChild.textContent = `${name} を書き出し中…`;
+  toast('保存する場所と名前を選んで（Mac の保存画面）。選んだあと数秒で書き出す', { ms: 60000 });
+  try {
+    const r = await fetch('/api/export-save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: S.path, kind }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.detail || `${r.status}`);
+    if (d.canceled) { toast('書き出しをやめた', { ms: 2500 }); return; }
+    const extra = d.raster ? `・画像になった部分 ${d.raster}` : '';
+    toast([`✔ ${name}（${d.slides}枚${extra}）`, el('span', { class: 'sub' }, `${d.folder} に「${d.name}」を保存した`)], { ms: 6000 });
+  } catch (e) {
+    toast('✖ ' + e.message, { ms: 10000 });
   } finally {
     S.exporting = false; b.disabled = false; b.firstChild.textContent = '書き出し';
   }

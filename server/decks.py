@@ -104,8 +104,7 @@ def new(rel: str) -> str:
     d = safe("/".join(parts))
     if d.exists():
         raise DeckError("同じ名前のものがもうある")
-    d.mkdir(parents=True)
-    (d / "assets").mkdir()
+    d.mkdir(parents=True)   # assets/ は最初の画像を足したときに save_asset が作る（空のフォルダを置かない）
     tpl = (THEME / "new.html").read_text(encoding="utf-8")
     html = (tpl.replace("{{THEME}}", (THEME / "default.css").read_text(encoding="utf-8").strip())
                .replace("{{VARS}}", (THEME / "vars.css").read_text(encoding="utf-8").strip())
