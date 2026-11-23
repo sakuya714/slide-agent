@@ -115,7 +115,7 @@ slide-agent/
 ├── install.sh       セットアップ
 └── private/         ← 自分だけ（GitHub に上がらない）
     ├── deck/          作業中の資料。{フォルダ}/{資料名}/deck.html と assets/（画像）。ホームのフォルダの階層になる
-    └── rules/         自分で育てる AI への指示。main.md は全資料、{フォルダ名}.md はそのフォルダの資料用（例：rules/営業.md）
+    └── rules/         自分で育てる AI への指示。main.md は全資料、{フォルダ名}.md はそのフォルダの資料用、{フォルダ名}-qa.md は最終チェック用（例：rules/営業.md）
 ```
 
 ## PPTX になるとき
