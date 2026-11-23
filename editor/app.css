@@ -53,14 +53,15 @@ kbd { font-family: inherit; font-size: 11px; background: var(--panel2); border: 
 
 /* ---- 上の帯 ---- */
 #top {
-  height: 48px; flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; padding: 0 10px 0 8px;
+  height: 48px; flex: none; display: grid; grid-template-columns: minmax(160px, 1fr) auto auto; align-items: center; gap: 12px; padding: 0 10px 0 8px;
   border-bottom: 1px solid var(--line); background: var(--panel); position: relative; z-index: 20;
 }
 #homeBtn { margin-right: 2px; }
 .doc-title { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
-.doc-title .folder { color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
+/* 幅が足りないときは、フォルダ名から先に縮める（資料名をなるべく残す） */
+.doc-title .folder { color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 0 1000 auto; min-width: 0; }
 .doc-title .folder:not(:empty)::after { content: " /"; }
-#deckName { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#deckName { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; min-width: 0; }
 .status { font-size: 12px; color: var(--faint); white-space: nowrap; margin-left: 6px; }
 .status::before { content: "●"; margin-right: 4px; font-size: 8px; vertical-align: 1px; }
 .status.saved::before { color: var(--green); }
@@ -75,6 +76,8 @@ kbd { font-family: inherit; font-size: 11px; background: var(--panel2); border: 
 .tools { display: flex; align-items: center; gap: 4px; }
 .vsep { width: 1px; height: 20px; background: var(--line2); margin: 0 4px; }
 button.tool { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 9px; white-space: nowrap; background: none; border-color: transparent; color: var(--sub); }
+/* 画面が狭いときは、上の帯の編集の道具をアイコンだけにして、資料名の幅を残す（名前は title に出る） */
+@media (max-width: 1100px) { #top .top-tools button.tool[data-icon] { font-size: 0; gap: 2px; padding: 0 7px; } }
 button.tool:hover:not(:disabled), button.tool.open { background: var(--panel2); color: var(--text); border-color: transparent; }
 button.tool.primary { background: var(--text); color: #111114; font-weight: 600; }
 button.tool.primary:hover:not(:disabled), button.tool.primary.open { background: #fff; color: #111114; }
