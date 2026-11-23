@@ -192,6 +192,25 @@ body {
   --pptx-font-serif: "Yu Mincho";
 }
 </style>
+<style data-deck="welcome">
+/* 編集画面の見取り図 */
+.ui { display: grid; grid-template-columns: 92px 1fr 120px; grid-template-rows: 46px 1fr 58px; gap: 6px; height: 360px; }
+.ui > div { background: var(--paper2); display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; line-height: 1.4; color: var(--ink); text-align: center; }
+.ui .no { font-size: 22px; }
+.ui-top { grid-column: 1 / 4; }
+.ui-stage { background: var(--paper) !important; border: 1px solid var(--line); flex-direction: column; }
+.ui-notes { grid-column: 2 / 3; }
+.ui-left, .ui-right { flex-direction: column; }
+/* カードの中の箇条書き */
+.card ul { padding-left: 1.1em; }
+.card li { font-size: 17px; line-height: 1.7; }
+.card li + li { margin-top: 4px; }
+/* ファイル名の表（名前が長いので左の列を広く） */
+.kv.files > div { grid-template-columns: 196px 1fr; font-size: 17px; }
+.kv.files > div > :first-child { letter-spacing: .02em; }
+/* チェックの印 */
+.mark { font-size: 28px; line-height: 1; width: 34px; flex: none; }
+</style>
 </head>
 <body>
 
@@ -200,6 +219,7 @@ body {
   <p class="eyebrow">ようこそ</p>
   <h1>AI が作って、<br>人が仕上げる資料づくり</h1>
   <p class="lead muted">Slide Agent の紹介と使い方</p>
+  <div class="row" style="gap: 12px; margin-top: 12px;"><span class="tag">AI が作る</span><span class="tag">画面で直す</span><span class="tag">PDF・PPTX に書き出す</span></div>
   <div class="footer"><span>最初から入っている見本の資料です。自由に直して試してください</span><span></span></div>
   <aside class="notes">最初から入っている見本の資料。ここで操作を試してから、自分の資料を作り始める。</aside>
 </section>
@@ -209,12 +229,12 @@ body {
   <h2>この資料の内容</h2>
   <div class="spacer"></div>
   <div class="list">
-    <div><span class="no">01</span><h3>Slide Agent とは</h3><p>できること・資料ができるまで</p></div>
-    <div><span class="no">02</span><h3>使い方</h3><p>AI への頼み方・画面の見方・よく使う操作</p></div>
-    <div><span class="no">03</span><h3>書き出しと置き場所</h3><p>PDF と PPTX の違い・資料の置き場所</p></div>
+    <div><span class="no">01</span><h3>Slide Agent とは</h3><p>できること・資料ができるまで・安心して使える理由</p></div>
+    <div><span class="no">02</span><h3>使い方</h3><p>AI への頼み方・画面の見方・よく使う操作・チェック</p></div>
+    <div><span class="no">03</span><h3>書き出しと置き場所</h3><p>PDF と PPTX の使い分け・ファイルの置き場所</p></div>
   </div>
   <div class="spacer"></div>
-  <div class="footer"><span>Slide Agent</span><span>2 / 14</span></div>
+  <div class="footer"><span>Slide Agent</span><span>02 / 15</span></div>
   <aside class="notes">3つの章で、何ができるか・どう使うか・どこに何があるかを順に説明する。</aside>
 </section>
 
@@ -224,9 +244,10 @@ body {
     <div>
       <h2>Slide Agent とは</h2>
       <p class="eyebrow">About</p>
+      <p class="muted" style="margin-top: 14px;">できること・資料ができるまで</p>
     </div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>3 / 14</span></div>
+  <div class="footer"><span>Slide Agent</span><span>03 / 15</span></div>
   <aside class="notes"></aside>
 </section>
 
@@ -234,12 +255,17 @@ body {
   <p class="eyebrow">Slide Agent とは｜できること</p>
   <h2>3つのことができる</h2>
   <p class="lead">資料の正本は <em>deck.html の1ファイル</em>。AI も人も同じファイルを直す</p>
+  <div class="spacer"></div>
   <div class="grid cols-3">
-    <div class="card"><span class="no">01</span><h3>AI が作る</h3><p>Claude Code に頼むと、決まった型とデザインで資料を作る。</p></div>
-    <div class="card"><span class="no">02</span><h3>画面で直す</h3><p>ブラウザで文字・色・並びを直す。保存は自動。</p></div>
-    <div class="card"><span class="no">03</span><h3>書き出す</h3><p>PDF と、PowerPoint で直せる PPTX にする。</p></div>
+    <div class="card"><span class="no">01</span><h3>AI が作る</h3><p>Claude Code に頼むと、決まった型とデザインで作る。</p>
+      <ul><li>表紙・目次・章の区切りまで</li><li>自分の決まりを覚えさせられる</li></ul></div>
+    <div class="card"><span class="no">02</span><h3>画面で直す</h3><p>ブラウザで、文字・色・並びをそのまま直す。</p>
+      <ul><li>直すと1秒後に自動で保存</li><li>⌘Z で何回でも戻せる</li></ul></div>
+    <div class="card"><span class="no">03</span><h3>書き出す</h3><p>PDF と、PowerPoint で直せる PPTX にする。</p>
+      <ul><li>毎回 deck.html から作り直す</li><li>保存する場所と名前を選べる</li></ul></div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>4 / 14</span></div>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>04 / 15</span></div>
   <aside class="notes">AI が書いた資料を人が直し、また AI が直す。PDF・PPTX は毎回 deck.html から作り直すので、正本がずれない。</aside>
 </section>
 
@@ -247,32 +273,38 @@ body {
   <p class="eyebrow">Slide Agent とは｜資料ができるまで</p>
   <h2>資料ができるまで</h2>
   <p class="lead">AI と人が<em>交互に直して</em>仕上げる</p>
+  <div class="spacer"></div>
   <div class="steps">
-    <div class="card"><span class="no">01</span><h3>頼む</h3><p>Claude Code に「〇〇の資料作って」</p></div>
+    <div class="card"><span class="no">01</span><h3>頼む</h3><p>Claude Code に「〇〇の資料作って」と頼む。画面で開いた状態で届く。</p></div>
     <span class="next">›</span>
-    <div class="card"><span class="no">02</span><h3>直す</h3><p>画面で文字や色を直す。AI にも直させる</p></div>
+    <div class="card"><span class="no">02</span><h3>直す</h3><p>画面で文字や色を直す。大きな直しは AI に頼む。</p></div>
     <span class="next">›</span>
-    <div class="card"><span class="no">03</span><h3>確かめる</h3><p>「チェック」ではみ出しなどを調べる</p></div>
+    <div class="card"><span class="no">03</span><h3>確かめる</h3><p>「チェック」で、はみ出しや言葉の決まりを調べる。</p></div>
     <span class="next">›</span>
-    <div class="card"><span class="no">04</span><h3>書き出す</h3><p>PDF・PPTX にする</p></div>
+    <div class="card"><span class="no">04</span><h3>書き出す</h3><p>PDF・PPTX にして、メールで送る・印刷する。</p></div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>5 / 14</span></div>
-  <aside class="notes">AI がファイルを直すと、開いている画面に2秒以内に反映される。</aside>
+  <p class="bar">AI がファイルを直すと、開いている画面に <strong>2秒以内</strong> に出る。人が直したところは、AI が読み直してから直す。</p>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>05 / 15</span></div>
+  <aside class="notes">02 と 03 は何回でも行き来してよい。AI は直す前に必ず deck.html を読み直すので、画面で直した分は消えない。</aside>
 </section>
 
 <section class="slide">
   <p class="eyebrow">Slide Agent とは｜安心して使える</p>
   <h2>自分の Mac の中だけで動く</h2>
   <p class="lead">資料は<em>自分の Mac の中</em>に置かれ、GitHub にも上がらない</p>
-  <div class="spacer"></div>
   <div class="grid cols-3">
     <div class="stat"><span class="label">資料を外に送る回数</span><span class="num">0<span class="unit">回</span></span></div>
     <div class="stat"><span class="label">最初から使えるレイアウト</span><span class="num">12<span class="unit">種</span></span></div>
     <div class="stat"><span class="label">書き出せる形</span><span class="num">2<span class="unit">形式</span></span></div>
   </div>
-  <div class="spacer"></div>
-  <div class="footer"><span>Slide Agent</span><span>6 / 14</span></div>
-  <aside class="notes">サーバーは 127.0.0.1 だけで動き、外からはつながらない。private/ フォルダは Git に入らない仕組みが2重にある。</aside>
+  <div class="kv">
+    <div><span>動くところ</span><span>この Mac の中だけ。ほかのパソコンからはつながらない</span></div>
+    <div><span>資料</span><span>private/ に置く。Git に入らない仕組みが2重にある</span></div>
+    <div><span>保存</span><span>直すと1秒後に自動で保存。1つ前の版も残る</span></div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>06 / 15</span></div>
+  <aside class="notes">サーバーは 127.0.0.1 だけで動く。private/ は .gitignore と commit 前のフックの2つで Git に入らない。</aside>
 </section>
 
 <section class="slide" data-bg="soft" data-align="center">
@@ -281,9 +313,10 @@ body {
     <div>
       <h2>使い方</h2>
       <p class="eyebrow">How to Use</p>
+      <p class="muted" style="margin-top: 14px;">AI への頼み方・画面・操作・チェック</p>
     </div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>7 / 14</span></div>
+  <div class="footer"><span>Slide Agent</span><span>07 / 15</span></div>
   <aside class="notes"></aside>
 </section>
 
@@ -291,35 +324,46 @@ body {
   <p class="eyebrow">使い方｜AI に頼む</p>
   <h2>AI への頼み方</h2>
   <p class="lead">Claude Code をこのフォルダで開いて、<em>ふだんの言葉で</em>頼む</p>
+  <div class="spacer"></div>
   <div class="list">
     <div><h3>「〇〇社向けの提案資料を10枚で作って」</h3><p>新しい資料を作り、チェックを通して画面で開く</p></div>
     <div><h3>「3枚目をもっと短くして」</h3><p>開いている資料を直す</p></div>
     <div><h3>「次から表紙に社名を入れて」</h3><p>private/rules/ に決まりとして残し、次の資料から守る</p></div>
+    <div><h3>「出す前に最終チェックして」</h3><p>チェックに加えて、数字や言い回しを目でも確かめる</p></div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>8 / 14</span></div>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>08 / 15</span></div>
   <aside class="notes">AI は CLAUDE.md に書かれた型（構成・デザイン・部品）で資料を作る。自分好みの決まりは private/rules/ に育てていく。</aside>
 </section>
 
 <section class="slide">
   <p class="eyebrow">使い方｜画面の見方</p>
   <h2>編集画面の見方</h2>
-  <div class="spacer"></div>
-  <div class="kv">
-    <div><span>左の列</span><span>スライドの一覧。上の ＋・複製・削除で足す・消す。ドラッグで並べ替え</span></div>
-    <div><span>上の帯</span><span>文字・カード・画像を足す。発表・チェック・書き出し</span></div>
-    <div><span>真ん中</span><span>クリックで選ぶ。ダブルクリックで文字を直す。右クリックでメニュー</span></div>
-    <div><span>右のパネル</span><span>選んだものの色・大きさ・揃え。何も選ばなければスライドの設定</span></div>
-    <div><span>下の欄</span><span>発表者ノート。発表者表示と PPTX のノートに出る</span></div>
+  <div class="split">
+    <div class="ui">
+      <div class="ui-top"><span class="no">01</span>上の帯</div>
+      <div class="ui-left"><span class="no">02</span>左の列</div>
+      <div class="ui-stage"><span class="no">03</span>スライド</div>
+      <div class="ui-right"><span class="no">04</span>右の<br>パネル</div>
+      <div class="ui-notes"><span class="no">05</span>ノート</div>
+    </div>
+    <div class="kv">
+      <div><span>01 上の帯</span><span>文字・カード・画像を足す。発表・チェック・書き出し</span></div>
+      <div><span>02 左の列</span><span>スライドの一覧。足す・複製・消す。ドラッグで並べ替え</span></div>
+      <div><span>03 スライド</span><span>クリックで選ぶ。ダブルクリックで文字を直す。右クリックでメニュー</span></div>
+      <div><span>04 右のパネル</span><span>選んだものの色・大きさ・揃え</span></div>
+      <div><span>05 ノート</span><span>発表者ノート。発表者表示と PPTX に出る</span></div>
+    </div>
   </div>
-  <div class="spacer"></div>
-  <div class="footer"><span>Slide Agent</span><span>9 / 14</span></div>
-  <aside class="notes">左上の「‹」で資料の一覧に戻る。</aside>
+  <div class="footer"><span>Slide Agent</span><span>09 / 15</span></div>
+  <aside class="notes">左上の「‹」で資料の一覧に戻る。何も選んでいないとき、右のパネルはスライドの設定（地の色など）になる。</aside>
 </section>
 
 <section class="slide">
   <p class="eyebrow">使い方｜よく使う操作</p>
   <h2>覚えておくと速い操作</h2>
   <p class="lead">迷ったら <em>⌘/</em> でショートカットの一覧を出す</p>
+  <div class="spacer"></div>
   <div class="grid cols-3">
     <div class="card"><h3>⌘Z</h3><p>元に戻す。色や大きさを戻すときも</p></div>
     <div class="card"><h3>⌘D</h3><p>選んだ部品・スライドを複製</p></div>
@@ -328,8 +372,33 @@ body {
     <div class="card"><h3>⌘Enter</h3><p>このスライドから発表</p></div>
     <div class="card"><h3>Esc</h3><p>直し終わる・ひとつ外側を選ぶ</p></div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>10 / 14</span></div>
-  <aside class="notes">発表中は N で発表者表示（ノート・次のスライド・経過時間）、B で黒い画面。</aside>
+  <p class="bar">発表中は <strong>N</strong> で発表者表示（ノート・次のスライド・経過時間）、<strong>B</strong> で黒い画面。</p>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>10 / 15</span></div>
+  <aside class="notes">最初から発表するときは ⇧⌘Enter。</aside>
+</section>
+
+<section class="slide">
+  <p class="eyebrow">使い方｜チェック</p>
+  <h2>チェックで分かること</h2>
+  <p class="lead">上の「チェック」を押すと、<em>書き出す前に直すところ</em>が一覧で出る</p>
+  <div class="spacer"></div>
+  <div class="split">
+    <div class="kv">
+      <div><span>見た目</span><span>はみ出し・画像切れ・小さい文字・下の帯との重なり</span></div>
+      <div><span>ページ</span><span>ページ番号の並び・「p.○○」の参照先があるか</span></div>
+      <div><span>言葉・表記</span><span>使わない言葉・表記ゆれ・全角の英数字</span></div>
+      <div><span>構成案</span><span>資料のフォルダの構成案の直しが、入っているか</span></div>
+    </div>
+    <div class="list">
+      <div><span class="no">✖</span><h3>エラー</h3><p>書き出す前に必ず直す</p></div>
+      <div><span class="no">△</span><h3>注意</h3><p>直す</p></div>
+      <div><span class="no">○</span><h3>要確認</h3><p>文脈を見て、直すか決める</p></div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>11 / 15</span></div>
+  <aside class="notes">一覧から押すと、そのスライドに飛ぶ。閉じたあとは、チェックのボタンにカーソルを当てると前の結果がまた出る。使わない言葉や表記ゆれのリストは private/rules/{フォルダ名}-qa.md に書く。構成案は、資料のフォルダの いちばん新しい「構成案_v○.md」を読む。</aside>
 </section>
 
 <section class="slide" data-bg="soft" data-align="center">
@@ -338,9 +407,10 @@ body {
     <div>
       <h2>書き出しと置き場所</h2>
       <p class="eyebrow">Export</p>
+      <p class="muted" style="margin-top: 14px;">PDF と PPTX・ファイルの置き場所</p>
     </div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>11 / 14</span></div>
+  <div class="footer"><span>Slide Agent</span><span>12 / 15</span></div>
   <aside class="notes"></aside>
 </section>
 
@@ -348,31 +418,60 @@ body {
   <p class="eyebrow">書き出しと置き場所｜PDF と PPTX</p>
   <h2>PDF と PPTX の使い分け</h2>
   <p class="lead">見せるだけなら PDF、<em>相手が直すなら PPTX</em></p>
+  <div class="spacer"></div>
   <div class="grid cols-2">
-    <div class="card"><span class="no">PDF</span><h3>画面とまったく同じ見た目</h3><p>フォントも埋め込まれる。メールで送る・印刷するときに。</p></div>
-    <div class="card"><span class="no">PPTX</span><h3>PowerPoint で直せる</h3><p>文字・箱が PowerPoint の部品になる。表紙の背景や図は画像になる。</p></div>
+    <div class="card"><span class="no">PDF</span><h3>画面とまったく同じ見た目</h3>
+      <ul><li>フォントも埋め込まれる</li><li>メールで送る・印刷するときに</li></ul></div>
+    <div class="card"><span class="no">PPTX</span><h3>PowerPoint で直せる</h3>
+      <ul><li>文字・箱が PowerPoint の部品になる</li><li>表紙の背景や図は画像になる</li></ul></div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>12 / 14</span></div>
-  <aside class="notes">上の「書き出し」から選ぶ。保存のダイアログで、保存先のフォルダとファイル名を選ぶ。</aside>
+  <p class="bar">上の「書き出し」から選ぶ。保存の画面で、置く場所と名前を決める（名前は最初から資料の名前）。</p>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>13 / 15</span></div>
+  <aside class="notes">PPTX で画像になる部分は、チェックで「PPTX ではこの部分が画像になる」と出る。</aside>
 </section>
 
 <section class="slide">
   <p class="eyebrow">書き出しと置き場所｜フォルダ</p>
-  <h2>資料の置き場所</h2>
+  <h2>ファイルの置き場所</h2>
   <p class="lead"><em>private/</em> の中は自分だけのもの。GitHub には上がらない</p>
-  <div class="kv">
-    <div><span>private/deck/</span><span>作業中の資料。フォルダに分けると、一覧の左に階層で出る</span></div>
-    <div><span>private/rules/</span><span>AI への決まり。main.md は全部の資料、{フォルダ名}.md はそのフォルダの資料用</span></div>
+  <div class="spacer"></div>
+  <div class="grid cols-2">
+    <div>
+      <h3>private/deck/　資料</h3>
+      <div class="kv files" style="margin-top: 12px;">
+        <div><span>deck.html</span><span>資料そのもの（正本）</span></div>
+        <div><span>assets/</span><span>資料に入れた画像</span></div>
+        <div><span>.deck.bak.html</span><span>1つ前に保存した版</span></div>
+        <div><span>構成案_v○.md</span><span>構成案（置くとチェックが照らし合わせる）</span></div>
+      </div>
+    </div>
+    <div>
+      <h3>private/rules/　AI への決まり</h3>
+      <div class="kv files" style="margin-top: 12px;">
+        <div><span>main.md</span><span>すべての資料で守る決まり</span></div>
+        <div><span>{フォルダ名}.md</span><span>そのフォルダの資料の決まり</span></div>
+        <div><span>{フォルダ名}-qa.md</span><span>出す前の最終チェックの基準</span></div>
+      </div>
+    </div>
   </div>
-  <div class="footer"><span>Slide Agent</span><span>13 / 14</span></div>
-  <aside class="notes">この資料は private/deck/ようこそ/ に入っている。いらなくなったら消してよい。</aside>
+  <div class="spacer"></div>
+  <div class="footer"><span>Slide Agent</span><span>14 / 15</span></div>
+  <aside class="notes">資料は private/deck/{フォルダ}/{資料名}/ に1つずつ入る。フォルダに分けると、一覧の左に階層で出る。この資料は private/deck/ようこそ/ に入っている。いらなくなったら消してよい。</aside>
 </section>
 
 <section class="slide" data-align="center">
   <p class="eyebrow">まとめ</p>
   <h2>まずは「〇〇の資料作って」と頼んでみる</h2>
   <p class="lead muted">この資料も自由に直して、操作を試してください</p>
-  <div class="footer"><span>Slide Agent</span><span>14 / 14</span></div>
+  <div class="steps" style="margin-top: 20px;">
+    <div class="card"><span class="no">01</span><h3>この資料を直してみる</h3><p>文字を変える・スライドを足す・⌘Z で戻す</p></div>
+    <span class="next">›</span>
+    <div class="card"><span class="no">02</span><h3>AI に頼む</h3><p>Claude Code に、作りたい資料を伝える</p></div>
+    <span class="next">›</span>
+    <div class="card"><span class="no">03</span><h3>チェックして書き出す</h3><p>エラーが0になったら PDF・PPTX にする</p></div>
+  </div>
+  <div class="footer"><span>Slide Agent</span><span>15 / 15</span></div>
   <aside class="notes">わからないことは Claude Code に聞けば、README と CLAUDE.md を読んで答える。</aside>
 </section>
 
