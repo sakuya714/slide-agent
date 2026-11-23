@@ -3,7 +3,7 @@
 見た目のチェック（check.js）と同じ形 {slide, level, msg, where, group} の一覧を返す。
 - level：error（直す）／warn（注意）／info（要確認：文脈を目で見て判断する）
 - どの資料にも使うチェック：資料名（＝PDF名）の濁点、ページ番号の並び、p.○○ の参照先、
-  全角の英数字、4けた以上の数のカンマ、【】タグの数、構成案との照合
+  全角の英数字、4けた以上の数のカンマ、構成案との照合
 - 言葉のリストなどの中身は private/rules/ の md に書く（```slide-qa の JSON。下の load_config）
 """
 from __future__ import annotations
@@ -26,7 +26,6 @@ EXTRACT = """() => [...document.querySelectorAll('section.slide')].map((s) => {
 
 FLAT = re.compile(r"\s+")
 FULLWIDTH = re.compile(r"[０-９Ａ-Ｚａ-ｚ]")
-TAG = re.compile(r"【[^】]{1,10}】")
 REF = re.compile(r"(?<![A-Za-z])[pP]\.\s?(\d{1,3})(?!\d)")
 PAGE = re.compile(r"(\d{1,3})\s*/\s*(\d{1,3})")
 BIGNUM = re.compile(r"(?<![\d,.\-/vV–:#])(\d{4,})(?![\d年月日\-/–:%])")
@@ -39,7 +38,7 @@ def flat(s: str) -> str:
 def load_config(deck_dir: Path) -> dict:
     """private/rules/ の main.md・{フォルダ名}.md・{フォルダ名}-qa.md から ```slide-qa の JSON を集める。
     リストはつなぎ、そのほかは後のファイルが勝つ。"""
-    cfg = {"ng": [], "check": [], "variants": [], "tag_limit": 1}
+    cfg = {"ng": [], "check": [], "variants": []}
     rules = decks.PRIVATE / "rules"
     top = decks.rel_of(deck_dir).split("/")[0].lower()
     names = ["main.md", f"{top}.md", f"{top}-qa.md"]
@@ -119,11 +118,6 @@ def run(page, deck_dir: Path) -> list[dict]:
                 for m in REF.finditer(src):
                     if int(m.group(1)) not in nums:
                         add(i, "error", "参照", f"p.{int(m.group(1)):02d} というページが無い{label}", ctx(src, m.start(), m.end()))
-
-        # ---- 【】タグ
-        tags = TAG.findall(text)
-        if len(tags) > cfg.get("tag_limit", 1):
-            add(i, "warn", "言葉", f"【】のタグが {len(tags)} 個（1ページ {cfg.get('tag_limit', 1)} 個まで。普通の言葉にできないか）", " ".join(tags))
 
         if not body:
             continue
