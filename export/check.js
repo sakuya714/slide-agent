@@ -56,6 +56,25 @@
         push('warn', '色を直書きしている（var(--accent) などテーマ色を使う）', el);
       }
     }
+
+    // 下の帯（.footer）との重なり。中身の下端と下の帯の上端のあいだを 12px 以上あける
+    const foot = slide.querySelector(':scope > .footer');
+    if (foot) {
+      const ft = foot.getBoundingClientRect().top;
+      let low = null;
+      for (const el of slide.querySelectorAll('*')) {
+        if (el.closest('.footer, aside.notes, .logo, script, style') || el.matches('.spacer, .bg, .shade')) continue;
+        const cs = getComputedStyle(el);
+        if (cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = el.getBoundingClientRect();
+        if (r.height > 0 && (!low || r.bottom > low.r.bottom)) low = { el, r };
+      }
+      if (low) {
+        const gap = Math.round(ft - low.r.bottom);
+        if (gap < 0) push('error', `下の帯（©・ページ番号）に ${-gap}px 重なっている`, low.el);
+        else if (gap < 12) push('warn', `下の帯（©・ページ番号）とのあいだが ${gap}px（12px 以上あける）`, low.el);
+      }
+    }
   });
   return issues;
 })()

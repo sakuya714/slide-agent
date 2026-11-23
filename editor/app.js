@@ -1288,26 +1288,29 @@ async function runCheck() {
     b.disabled = false;
   }
 }
+// level：error（直す）／warn（注意）／info（要確認：文脈を見て判断する。数やバッジには入れない）
 function slideIssueLevel(i) {
-  const l = (S.issues || []).filter((x) => x.slide === i + 1);
+  const l = (S.issues || []).filter((x) => x.slide === i + 1 && x.level !== 'info');
   return l.some((x) => x.level === 'error') ? 'err' : l.length ? 'warn' : '';
 }
 function renderCheckBadge() {
   const bd = $('#checkBadge');
   if (!S.issues) { bd.hidden = true; return; }
   const errs = S.issues.filter((x) => x.level === 'error').length;
+  const warns = S.issues.filter((x) => x.level === 'warn').length;
   bd.hidden = false;
-  bd.className = 'badge ' + (errs ? 'err' : S.issues.length ? 'warn' : '');
-  bd.textContent = errs || S.issues.length || '✓';
+  bd.className = 'badge ' + (errs ? 'err' : warns ? 'warn' : '');
+  bd.textContent = errs || warns || '✓';
 }
 function showCheckMenu() {
-  const list = S.issues || [];
-  const errs = list.filter((x) => x.level === 'error').length;
-  const items = [{ node: el('div', { class: 'menu-head' }, el('span', {}, `エラー ${errs} ・ 注意 ${list.length - errs}`), el('span', {}, 'エラーは書き出す前に直す')) }];
-  if (!list.length) items.push({ node: el('div', { class: 'check-ok' }, '✓ 問題なし。そのまま書き出せる。') });
+  const order = { error: 0, warn: 1, info: 2 };
+  const list = [...(S.issues || [])].sort((a, b) => order[a.level] - order[b.level] || a.slide - b.slide);
+  const n = (lv) => list.filter((x) => x.level === lv).length;
+  const items = [{ node: el('div', { class: 'menu-head' }, el('span', {}, `エラー ${n('error')} ・ 注意 ${n('warn')} ・ 要確認 ${n('info')}`), el('span', {}, 'エラーは書き出す前に直す')) }];
+  if (!n('error') && !n('warn')) items.push({ node: el('div', { class: 'check-ok' }, n('info') ? '✓ エラー・注意なし。要確認は文脈を見て判断する。' : '✓ 問題なし。そのまま書き出せる。') });
   for (const x of list) {
     items.push({ node: el('button', { class: 'check-item ' + x.level, onclick: () => { closeMenu(); if (x.slide) { toggleGrid(false); showSlide(x.slide - 1); } } },
-      `${x.slide}枚目　${x.msg}`, el('span', { class: 'where' }, x.where)) });
+      `${x.slide ? x.slide + '枚目' : '全体'}　［${x.group || '見た目'}］${x.msg}`, el('span', { class: 'where' }, x.where)) });
   }
   openMenu(null, items, { x: $('#checkBtn').getBoundingClientRect().right, y: 48, cls: 'check-pop' });
   S.menuAnchor = $('#checkBtn'); $('#checkBtn').classList.add('open');

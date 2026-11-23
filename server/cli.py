@@ -23,12 +23,16 @@ def cmd_check(target: str) -> int:
     from export.check import run
     d = decks.resolve_deck(target)
     issues = run(d)
-    errors = [i for i in issues if i["level"] == "error"]
-    for i in issues:
-        mark = "✖" if i["level"] == "error" else "△"
-        print(f"{mark} {i['slide']}枚目 {i['where']}  {i['msg']}")
-    print(f"{'✖' if errors else '✔'} チェック：エラー {len(errors)}・注意 {len(issues) - len(errors)}（{decks.rel_of(d)}）")
-    return 1 if errors else 0
+    count = {k: sum(1 for i in issues if i["level"] == k) for k in ("error", "warn", "info")}
+    order = {"error": 0, "warn": 1, "info": 2}
+    for i in sorted(issues, key=lambda x: (order[x["level"]], x["slide"])):
+        mark = {"error": "✖", "warn": "△", "info": "○"}[i["level"]]
+        where = f"{i['slide']}枚目" if i["slide"] else "全体"
+        print(f"{mark} {where}［{i.get('group', '見た目')}］{i['msg']}  {i['where']}")
+    print(f"{'✖' if count['error'] else '✔'} チェック：エラー {count['error']}・注意 {count['warn']}・要確認 {count['info']}（{decks.rel_of(d)}）")
+    if count["info"]:
+        print("  ○ 要確認は、文脈を見て判断する（直さなくてよいこともある）")
+    return 1 if count["error"] else 0
 
 
 def main(argv=None) -> int:
