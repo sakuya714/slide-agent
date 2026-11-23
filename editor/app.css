@@ -248,6 +248,8 @@ button.icon.danger:hover:not(:disabled) { color: #ffb3ae; background: #3a2222; }
 .check-item::before { position: absolute; left: 8px; top: 6px; }
 .check-item.error::before { content: "✖"; color: var(--red); }
 .check-item.warn::before { content: "△"; color: var(--amber); }
+.check-item.info::before { content: "○"; color: var(--faint); }
+.check-item.info { color: var(--sub); }
 .check-item .where { display: block; color: var(--faint); font-size: 12px; word-break: break-all; }
 .check-ok { padding: 14px 10px; color: var(--sub); }
 
